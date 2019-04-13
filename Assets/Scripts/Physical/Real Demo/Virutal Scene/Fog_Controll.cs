@@ -7,11 +7,11 @@ public class Fog_Controll : MonoBehaviour {
 
     private Vector3 closePos;
     private bool windowOpened;
-    private GameObject light;
+    private GameObject mylight;
 	// Use this for initialization
 	void Start () {
         closePos = transform.position;
-        light = GameObject.Find("Light");
+        mylight = GameObject.Find("Light");
 	}
 	
 	// Update is called once per frame
@@ -22,7 +22,7 @@ public class Fog_Controll : MonoBehaviour {
             windowOpened = false;
         // when light is opend, turn the fog into gray
         Color color = Color.gray;
-        if(light.activeSelf)
+        if(mylight.activeSelf)
             RenderSettings.fogColor = color;
         RenderSettings.fog = true;
         if (!windowOpened)

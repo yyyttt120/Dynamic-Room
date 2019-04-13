@@ -29,8 +29,8 @@ public class RoombaFeedback_Velocity : RoombaFeedback_Test {
         //float angle_input;
         //float p_ang = p1;//controlling variable of angle
         float p_dis = p2;//controlling variable of distance
-        float angleDirection;// the angle between walltoTarget and the forward direction of the wall
-        int movingdirection;
+        //float angleDirection;// the angle between walltoTarget and the forward direction of the wall
+        //int movingdirection;
         //angle
         target_Velocity = new Vector3(target_Velocity.x, 0, target_Velocity.z);
         Vector3 wall_Velocity = device.velocity;

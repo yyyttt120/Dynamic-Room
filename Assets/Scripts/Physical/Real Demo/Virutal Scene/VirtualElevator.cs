@@ -48,7 +48,7 @@ public class VirtualElevator : MonoBehaviour {
             button_ele = true;
         }
         elevatorSwitch = GameObject.Find("Elevator_Switch_Real").transform.GetChild(0).gameObject;
-        switch_ele = elevatorSwitch.GetComponent<Swithc_Elevator>().GetSwitcher();
+        //switch_ele = elevatorSwitch.GetComponent<Swithc_Elevator>().GetSwitcher();
         userEntered = ele_Indicator.GetComponent<Elevator_Enter_Indicator>().GetUserEntered();
         //print("button_ele =" + button_ele);
         //print("switch_ele =" + switch_ele);
@@ -60,7 +60,7 @@ public class VirtualElevator : MonoBehaviour {
         lastSceneID = sceneID;
 
         //print("button_ele =" + button_ele);
-        if (button_ele && switch_ele || Input.GetKey(KeyCode.P))
+        if (button_ele /*&& switch_ele*/ || Input.GetKey(KeyCode.P))
             OpenDoor();
         if(!doorOpening && door.transform.position.x - closePosition.x < 0.010 && !GetComponent<ElevatorEmergency>().GetEmergency())    
             CloseDoor();

@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class Switch_Light : MonoBehaviour {
     private int count;
     public bool switcher = false;
-    public GameObject light;
+    public GameObject mylight;
 	// Use this for initialization
 	void Start () {
 		
@@ -31,7 +31,7 @@ public class Switch_Light : MonoBehaviour {
             {
                 if(SceneManager.GetActiveScene().buildIndex != 0)
                     RenderSettings.fog = false;
-                light.SetActive(true);
+                mylight.SetActive(true);
             }
         }
         else
@@ -39,7 +39,7 @@ public class Switch_Light : MonoBehaviour {
             if (!RenderSettings.fog)
             {
                 RenderSettings.fog = true;
-                light.SetActive(false);
+                mylight.SetActive(false);
             }
         }
     }

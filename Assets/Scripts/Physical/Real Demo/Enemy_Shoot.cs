@@ -6,7 +6,7 @@ public class Enemy_Shoot : Shoot {
     public AudioSource cocked;
     public AudioSource hurt;
     public AudioSource die;
-    public GameObject light;
+    public GameObject mylight;
     Animator ani;
     bool detected;// if detecte hero, it's true; else, false
 	// Use this for initialization
@@ -18,9 +18,9 @@ public class Enemy_Shoot : Shoot {
 	// Update is called once per frame
 	void Update () {
         detected = DetectHero();
-        if ( !light.activeSelf)
+        if ( !mylight.activeSelf)
             detected = false;
-        ani.SetBool("SawHero", light.activeSelf);
+        ani.SetBool("SawHero", mylight.activeSelf);
 	}
 
     // when enemy can see hero, return true;

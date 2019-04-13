@@ -38,8 +38,6 @@ public class Door_slide_Right : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Rigidbody rigi = GetComponent<Rigidbody>();
-        rigi.transform.position = rigi.transform.position;
 
         positionnow = controller.transform.position;
         speed = positionnow.x - positionlastframe.x;
@@ -53,6 +51,7 @@ public class Door_slide_Right : MonoBehaviour {
             RoombaMotionController.Translation_LR(target_wall, wall, 0, true, 0, 800);
         }*/
         //print("over =" + over);
+        print("over =" + over);
         if (over)
         {
             //if (ViveInput.GetPress(HandRole.LeftHand, ControllerButton.Trigger))
