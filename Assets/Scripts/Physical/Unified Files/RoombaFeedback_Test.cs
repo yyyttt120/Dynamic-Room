@@ -49,10 +49,13 @@ public class RoombaFeedback_Test : MonoBehaviour {
     public double p_2loop;
     public double d_2loop;
 
+    private int outputMaxAmount = 1000;
+
     private double angle_lastframe;
     private double angle_rotationlastframe;
     private double distance_lastframe;
     private double speed_lastframe = 0;
+    private double angleSpd_lastframe = 0;
     private double angle_sum;
     private double distance_sum;
 
@@ -174,6 +177,16 @@ public class RoombaFeedback_Test : MonoBehaviour {
 
         return move1over && move2over;
     }*/
+    private int ampLimit(int vaule)
+    {
+        if (vaule > outputMaxAmount)
+        {
+            vaule = outputMaxAmount;
+        }
+        if (vaule < -outputMaxAmount)
+            vaule = -outputMaxAmount;
+        return vaule;
+    }
 
 
     public double AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)//return the angle between two vectors
@@ -227,18 +240,9 @@ public class RoombaFeedback_Test : MonoBehaviour {
         velocity_R = (int)(0 - angle_input);
         velocity_L = (int)(0 + angle_input);
 
-        if (velocity_R > 1000)//amplitude limiting
-        {
-            velocity_R = 1000;
-        }
-        if (velocity_R < -1000)
-            velocity_R = -1000;
-        if (velocity_L > 1000)
-        {
-            velocity_L = 1000;
-        }
-        if (velocity_L < -1000)
-            velocity_L = -1000;
+        //amplitude limiting
+        velocity_R = ampLimit(velocity_R);
+        velocity_L = ampLimit(velocity_L);
         if (angle >= -0.5 && angle <= 0.5)
         {
             finished = true;
@@ -315,33 +319,25 @@ public class RoombaFeedback_Test : MonoBehaviour {
         //I control for distance
         distance_sum = distance_sum + distance * movingdirection;
         //bang bang controll
-        if (distance <= 0.2f)
-        {
+        //if (distance <= 0.2f)
+        //{
             distance_input = p_dis * distance * movingdirection + d2 * distance_error + i_translate2 * distance_sum;
             angle_input = p_ang * angle;
-        }
-        else
+        //}
+        /*else
         {
             distance_input = 1000 * movingdirection;
-        }
+        }*/
 
         //*******************prepare for second loop of PID********************
         spd_ref = distance_input;
+        print("spd_ref =" + spd_ref);
         angleSpd_ref = angle_input;
-        distance_input = Translate_vel(p_2loop, d_2loop);
+        distance_input = Translate_vel_dis(p_2loop, d_2loop);
         //*******************************************
-        if (distance_input > 1000)//amplitude limiting
-        {
-            distance_input = 1000;
-        }
-        if (distance_input < -1000)
-            distance_input = -1000;
-        if (angle_input > 1000)
-        {
-            angle_input = 1000;
-        }
-        if (angle_input < -1000)
-            angle_input = -1000;
+
+        distance_input = ampLimit((int)distance_input);
+        angle_input = ampLimit((int)angle_input);
         velocity_R = (int)(distance_input - angle_input);
         velocity_L = (int)(distance_input + angle_input);
 
@@ -553,20 +549,32 @@ public class RoombaFeedback_Test : MonoBehaviour {
         return finished;
     }
 
-    // 2nd LOOP of PID
-    public double Translate_vel(double p, double d)
+    // 2nd LOOP of PID output of distance
+    public double Translate_vel_dis(double p_dis, double d_dis)
     {
         SteamVR_TrackedObject tracker = gameObject.transform.parent.GetComponent<SteamVR_TrackedObject>();
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)tracker.index);
-        double spd_err = spd_ref - device.velocity.magnitude;
-        double spd_d = device.velocity.magnitude - speed_lastframe;
-        speed_lastframe = device.velocity.magnitude;
+        double spd_err = spd_ref - device.velocity.magnitude*1000;
+        double spd_d = device.velocity.magnitude*1000 - speed_lastframe;
+        speed_lastframe = device.velocity.magnitude*1000;
         //print("speed_d =" + spd_d);
-        double output = spd_err * p + spd_d * d;
+        double output = spd_err * p_dis + spd_d * d_dis;
         return output;
 
     }
-    
+    //2nd LOOP of PID output of angle
+    public double Translate_vel_angle(double p_dis, double d_dis)
+    {
+        SteamVR_TrackedObject tracker = gameObject.transform.parent.GetComponent<SteamVR_TrackedObject>();
+        SteamVR_Controller.Device device = SteamVR_Controller.Input((int)tracker.index);
+        double angle_err = angleSpd_ref - device.angularVelocity.magnitude;
+        /*double spd_d = device.velocity.magnitude - speed_lastframe;
+        speed_lastframe = device.velocity.magnitude;
+        //print("speed_d =" + spd_d);
+        double output = spd_err * p_dis + spd_d * d_dis;*/
+        return 0;
+    }
+
     // inpput:1.the position of the wall 2.the direction the wall is facing 3.the distance from roomba to wall
     // output:the position of the roomba which controll the wall
 

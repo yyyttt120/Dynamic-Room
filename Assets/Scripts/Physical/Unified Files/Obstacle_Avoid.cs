@@ -40,17 +40,19 @@ public class Obstacle_Avoid : MonoBehaviour {
                 Debug.DrawRay(this.transform.position, wallPredict.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
                 if (Physics.Raycast(this.transform.position, wallPredict.normalized, out hit, Mathf.Min(detectRange, wallPredict.magnitude), layMask))
                 {
-                    //
-                    if (hit.collider.gameObject != gameObject)
+                //
+                Color color_y = Color.yellow;
+                Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
+                if (hit.collider.gameObject != gameObject)
                     {
                         print(gameObject.name + "ray hit" + hit.collider.gameObject.name);
-                        avoidanceVector += new Vector3(hit.normal.z, 0, -hit.normal.x).normalized * force;
+                        avoidanceVector += new Vector3(hit.normal.x, 0, hit.normal.z).normalized * force;
                         avoidanceVector.y = 0;
                     }
                 /*else
                     avoidanceVector = Vector3.zero;*/
-                if (avoidanceVector.magnitude > 4)
-                    avoidanceVector = avoidanceVector.normalized * 4;
+                if (avoidanceVector.magnitude > 1)
+                    avoidanceVector = avoidanceVector.normalized * 1f;
 
                 }
                 else
