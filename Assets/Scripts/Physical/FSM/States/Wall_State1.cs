@@ -56,10 +56,11 @@ public class Wall_State1 : StateMachineBehaviour {
         */
         if (targetChange)
         {
+            Debug.Log(animator.gameObject.name + " targetchange =" + targetChange);
             roboticWall.wallToTarget_controller.SetP1(40);
             animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
         }
-        if (roboticWall.wallToTarget_controller.Get_State()&& !targetChange)
+        if (roboticWall.wallToTarget_controller.Get_State())
         {
             roboticWall.wallToTarget_controller.SetP1(65);
             

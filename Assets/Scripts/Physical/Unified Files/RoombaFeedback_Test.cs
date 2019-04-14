@@ -341,18 +341,9 @@ public class RoombaFeedback_Test : MonoBehaviour {
         velocity_R = (int)(distance_input - angle_input);
         velocity_L = (int)(distance_input + angle_input);
 
-        if (velocity_R > 1000)//amplitude limiting
-        {
-            velocity_R = 1000;
-        }
-        if (velocity_R < -1000)
-            velocity_R = -1000;
-        if (velocity_L > 1000)
-        {
-            velocity_L = 1000;
-        }
-        if (velocity_L < -1000)
-            velocity_L = -1000;
+        velocity_R = ampLimit(velocity_R);
+        velocity_L = ampLimit(velocity_L);
+       
         if (distance <= err_distance)
         {
             c2.Stop(wallnum);

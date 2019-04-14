@@ -28,9 +28,10 @@ public class Slider_Controller : MonoBehaviour {
             raydir = -transform.forward;
         raydir.y = 0;
         Color color = Color.green;
-        Debug.DrawRay(user.transform.position, raydir, color, 0.1f, true);
+        Debug.DrawRay(user.transform.position, raydir.normalized * 2, color, 0.1f, true);
         if (Physics.Raycast(user.transform.position, raydir, out hit, 2f, layer))
         {
+            //print("hit point =" + hit.collider.gameObject.name);
             if (hit.collider.gameObject == this.gameObject)
             {
                 print("hit");

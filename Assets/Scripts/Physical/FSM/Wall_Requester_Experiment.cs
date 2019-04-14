@@ -50,8 +50,8 @@ public class Wall_Requester_Experiment : MonoBehaviour {
                 this.thisFrameState_x = true;
             else
                 this.thisFrameState_x = false;
-            print("thisframe =" + thisFrameState_x);
-            print("lastframe =" + lastFrameState_x);
+            //print("thisframe =" + thisFrameState_x);
+            //print("lastframe =" + lastFrameState_x);
             if (thisFrameState_x != lastFrameState_x)
                 trigger_x = true;
             else
