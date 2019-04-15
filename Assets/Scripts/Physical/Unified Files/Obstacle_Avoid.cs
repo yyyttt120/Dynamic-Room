@@ -6,6 +6,7 @@ public class Obstacle_Avoid : MonoBehaviour {
 
     private SteamVR_TrackedObject tracker;
     private SteamVR_Controller.Device device;
+    private GameObject target;
     private Robotic_Wall rWall;
     private int layMask = (1 << 9) | (1 << 10);
     private RaycastHit hit;
@@ -14,6 +15,8 @@ public class Obstacle_Avoid : MonoBehaviour {
     public float detectRange;//the range of predicted area
     public float force;//the force to avoid obstacle
     public float nonAvoidRange;//range of area where no need to avoid
+
+    private bool closeToTarget;//true when this robotic wall is close to it's target virtual wall
                         // Use this for initialization
     void Start() {
         rWall = new Robotic_Wall();
@@ -27,12 +30,23 @@ public class Obstacle_Avoid : MonoBehaviour {
     void Update() {
         //print("tracker" + tracker.gameObject.name);
         device = SteamVR_Controller.Input((int)tracker.index);
+        try
+        {
+            target = rWall.wallToTarget_controller.GetTarget();
+        }
+        catch(System.NullReferenceException e1)
+        {
+            print(e1.Message);
+            target = new GameObject();
+        }
+        print("close to target = " + closeToTarget);
         //wallPredict = GetMovingDir();
         //float angle = rWall.roomba_controller.AngleSigned(-this.transform.forward, device.velocity, Vector3.up);
         //print("angle = " + angle);
         //print("distance ="+ gameObject.name + wallPredict.magnitude);
-        print(gameObject.name + " target distance = " + wallPredict.magnitude);
-        if (wallPredict.magnitude > nonAvoidRange)
+        //print(gameObject.name + " target distance = " + wallPredict.magnitude);
+        
+        if (/*wallPredict.magnitude > nonAvoidRange && */!closeToTarget)
         {
             //if (angle > -20 && angle < 20 || angle > 160 && angle < 180 || angle > -180 && angle < -160)// when the wall are moving ahead (not rotating)
             //{
@@ -64,6 +78,20 @@ public class Obstacle_Avoid : MonoBehaviour {
         }
         else
             avoidanceVector = Vector3.zero;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag.CompareTo("Wall") == 0)
+            if(other.gameObject == target.transform.parent.gameObject)
+                closeToTarget = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.CompareTo("Wall") == 0)
+            if (other.gameObject == target.transform.parent.gameObject)
+                closeToTarget = false;
     }
 
 
