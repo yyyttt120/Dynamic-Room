@@ -331,7 +331,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
 
         //*******************prepare for second loop of PID********************
         spd_ref = distance_input;
-        print("spd_ref =" + spd_ref);
+        //print("spd_ref =" + spd_ref);
         angleSpd_ref = angle_input;
         distance_input = Translate_vel_dis(p_2loop, d_2loop);
         //*******************************************

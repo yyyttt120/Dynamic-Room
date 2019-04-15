@@ -22,7 +22,7 @@ public class test : MonoBehaviour {
         //print("mover =" + mover.name);
         mover.Set_Target(target);
         //print("anglevel ="+device.angularVelocity);
-        print("speed =" + device.velocity.magnitude*1000);
+        //print("speed =" + device.velocity.magnitude*1000);
         /*if (Input.GetKeyUp(KeyCode.K))
         {
             start = !start;

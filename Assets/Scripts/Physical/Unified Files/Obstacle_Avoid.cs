@@ -31,6 +31,7 @@ public class Obstacle_Avoid : MonoBehaviour {
         //float angle = rWall.roomba_controller.AngleSigned(-this.transform.forward, device.velocity, Vector3.up);
         //print("angle = " + angle);
         //print("distance ="+ gameObject.name + wallPredict.magnitude);
+        print(gameObject.name + " target distance = " + wallPredict.magnitude);
         if (wallPredict.magnitude > nonAvoidRange)
         {
             //if (angle > -20 && angle < 20 || angle > 160 && angle < 180 || angle > -180 && angle < -160)// when the wall are moving ahead (not rotating)
