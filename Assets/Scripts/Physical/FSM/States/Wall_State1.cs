@@ -54,8 +54,7 @@ public class Wall_State1 : StateMachineBehaviour {
         //if wall is keeping matching the slider, set P1 to 80 to improve the ability of tracking trajactory
         //and inactive the obstacle avoidance module to keep the wall slide smoothly 
         */
-
-        /*if (targetChange)
+        if (targetChange)
         {
             Debug.Log(animator.gameObject.name + " targetchange =" + targetChange);
             roboticWall.wallToTarget_controller.SetP1(40);
@@ -66,7 +65,7 @@ public class Wall_State1 : StateMachineBehaviour {
             roboticWall.wallToTarget_controller.SetP1(65);
             
             animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = false;
-        }*/
+        }
         Debug.Log("slider active: " + slider.activeSelf);
     }
 

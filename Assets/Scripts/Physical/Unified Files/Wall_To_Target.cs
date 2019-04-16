@@ -101,6 +101,7 @@ public class Wall_To_Target : MonoBehaviour {
                     //print(this.name + "target =" + target.name);
                     if (start_translate)
                     {
+                        print("translating");
                         //print(gameObject.name + " translating");
                         /*if(in_turn)
                             controll.SetErrDistance(0.1f);

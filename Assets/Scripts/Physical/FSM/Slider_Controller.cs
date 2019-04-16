@@ -36,7 +36,8 @@ public class Slider_Controller : MonoBehaviour {
             {
                 print("hit");
                 slider.SetActive(true);
-                slider.transform.position = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+                //to avoid user and target stay in a staight line which will influece the obstacle avoidance
+                slider.transform.position = new Vector3(hit.point.x+0.15f, transform.position.y, hit.point.z+0.15f);
                 slider.transform.forward = hit.normal;
                 visible = true;
             }

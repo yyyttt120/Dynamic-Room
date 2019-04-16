@@ -213,7 +213,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         return Math.Abs((A * pointVe2.x + B * pointVe2.y + C) / denominator); ;
     }
 
-    public bool Rotation(Vector3 targetdirection,GameObject wall,int wallnum ,double p1 ,double d, bool on)//angle recorrecting (p1 is the controlling variable of angle)
+    public virtual bool Rotation(Vector3 targetdirection,GameObject wall,int wallnum ,double p1 ,double d, bool on)//angle recorrecting (p1 is the controlling variable of angle)
     {
         bool finished = false;
         int velocity_R;
@@ -263,7 +263,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
     ////moving to target position with feedback controlling
     //input: 1.target position; 2.reference of the wall; 3.ID of the wall; 4.; 5. P parameter for angle; 6.P parameter for distance
     //output: return true when arrive the target
-    public bool Translation_LR(Vector3 targetposition,GameObject wall,int wallnum,bool on,double p1,double p2)//moving to target position with feedback controlling
+    public virtual bool Translation_LR(Vector3 targetposition,GameObject wall,int wallnum,bool on,double p1,double p2)//moving to target position with feedback controlling
     {
 
         recodeflag = false;
@@ -566,7 +566,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         return 0;
     }
 
-    // inpput:1.the position of the wall 2.the direction the wall is facing 3.the distance from roomba to wall
+    // inpput:1.the position of the wall 2.the forward direction of the wall 3.the distance from roomba to wall
     // output:the position of the roomba which controll the wall
 
     public Vector3 FindRoomba(Vector3 wallposition, Vector3 walldirection)

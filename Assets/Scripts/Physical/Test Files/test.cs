@@ -13,8 +13,8 @@ public class test : MonoBehaviour {
         mover = GetComponent <Wall_To_Target> ();
         start = false;
         mover.Set_Target(target);
-        tracker = gameObject.transform.parent.GetComponent<SteamVR_TrackedObject>();
-        device = SteamVR_Controller.Input((int)tracker.index);
+        //tracker = gameObject.transform.parent.GetComponent<SteamVR_TrackedObject>();
+        //device = SteamVR_Controller.Input((int)tracker.index);
     }
 	
 	// Update is called once per frame
