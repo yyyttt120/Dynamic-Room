@@ -7,7 +7,8 @@ public class FSMSystem : MonoBehaviour {
 
     public GameObject r_wall1;
     public GameObject r_wall2;
-    //public GameObject r_wall3;
+    public GameObject r_wall3;
+    public GameObject r_wall4;
 
     private GameObject wall;//virtual wall wait be allocated a robotic wall
 	// Use this for initialization
@@ -18,13 +19,15 @@ public class FSMSystem : MonoBehaviour {
             statesList.Add(r_wall1.GetComponent<Animator>());
         if(r_wall2.activeSelf)
             statesList.Add(r_wall2.GetComponent<Animator>());
-        //if (r_wall3.activeSelf)
-            //statesList.Add(r_wall3.GetComponent<Animator>());
+        if (r_wall3.activeSelf)
+            statesList.Add(r_wall3.GetComponent<Animator>());
+        if (r_wall4.activeSelf)
+            statesList.Add(r_wall4.GetComponent<Animator>());
     }
-	
-	// Update is called once per frame
-	void Update () {
-		/*foreach(Animator states in statesList)
+
+    // Update is called once per frame
+    void Update() {
+        /*foreach(Animator states in statesList)
         {
             MinusCounter("NearWallCounter", states);
         }*/
@@ -56,13 +59,19 @@ public class FSMSystem : MonoBehaviour {
     //answer the request from Wall_requester and allocate robotic walls to this request
     public Animator Allocate_wall(GameObject targetWall)
     {
+        string distanceList = "distance =";
+        foreach (Animator ani in statesList)
+        {
+            distanceList += ani.gameObject.name + DistanceToVirWall(targetWall, ani.gameObject)+ " ";
+        }
+        print(distanceList);
         // sort the robotic walls based on the distance from target virtual wall
         statesList.Sort(delegate (Animator phyW1, Animator phyW2)
         {
-            if (DistanceToVirWall(targetWall, phyW1.gameObject) < DistanceToVirWall(targetWall, phyW2.gameObject))
-                return -1;
-            else
+            if (DistanceToVirWall(targetWall, phyW1.gameObject) > DistanceToVirWall(targetWall, phyW2.gameObject))
                 return 1;
+            else
+                return -1;
         });
         foreach( Animator states in statesList)
         {

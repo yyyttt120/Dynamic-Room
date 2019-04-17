@@ -95,13 +95,13 @@ public class Wall_To_Target : MonoBehaviour {
             Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
             if (switch_button)
             {
-                print("PID On");
+                //print("PID On");
                 if (start)
                 {
                     //print(this.name + "target =" + target.name);
                     if (start_translate)
                     {
-                        print("translating");
+                        //print("translating");
                         //print(gameObject.name + " translating");
                         /*if(in_turn)
                             controll.SetErrDistance(0.1f);
@@ -125,7 +125,7 @@ public class Wall_To_Target : MonoBehaviour {
                 //**********************************************
                     if (!start_translate /*&& start_rotate*/)
                     {
-                        print("rotating");
+                        //print("rotating");
                         double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
                         if (angle> -90 &&angle<90)
                             start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);

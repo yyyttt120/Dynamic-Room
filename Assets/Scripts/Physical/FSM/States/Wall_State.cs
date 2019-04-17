@@ -34,9 +34,9 @@ public class Wall_State : StateMachineBehaviour {
         if(wall_requester.GetReleasedWall() == targetWall || !slider.activeSelf || slider == null)
         //***********************
         {
-            int counter = animator.GetInteger("NearWallCounter") - 1;
-            if (counter < -70)
-                counter = -70;
+            int counter = animator.GetInteger("NearWallCounter") - 2;
+            if (counter < -31)
+                counter = -31;
             animator.SetInteger("NearWallCounter", counter);
         }
         //if wall is keeping matching the slider, set P1 to 80 to improve the ability of tracking trajactory

@@ -30,7 +30,8 @@ public class Obstacle_Avoid : MonoBehaviour {
 
     private void FixedUpdate()
     {
-        closeStateThisFrame = new List<bool>();
+        //closeStateThisFrame = new List<bool>();
+        closeToTarget = false;
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class Obstacle_Avoid : MonoBehaviour {
         try
         {
             target = rWall.wallToTarget_controller.GetTarget();
-            print("target =" + target.name + " " + target.transform.parent.name);
+            //print("target =" + target.name + " " + target.transform.parent.name);
         }
         catch(System.NullReferenceException e1)
         {
@@ -48,13 +49,14 @@ public class Obstacle_Avoid : MonoBehaviour {
             target = null;
         }
         // *************
-        foreach (bool close in closeStateThisFrame)
+        
+        /*foreach (bool close in closeStateThisFrame)
         {
             closeToTarget = false;
             print("**********" + close);
             closeToTarget = close || closeToTarget;
-        }
-        print("close to target = " + closeToTarget);
+        }*/
+        //print("close to target = " + closeToTarget);
         //wallPredict = GetMovingDir();
         //float angle = rWall.roomba_controller.AngleSigned(-this.transform.forward, device.velocity, Vector3.up);
         //print("angle = " + angle);
@@ -101,28 +103,28 @@ public class Obstacle_Avoid : MonoBehaviour {
     {
         if (other.tag.CompareTo("Wall") == 0)
         {
-            print("close thing is =" + other.gameObject.name);
+            //print("close thing is =" + other.gameObject.name);
             if (other.gameObject == target.transform.parent.gameObject)
             {
-                print("closed");
+                //print("closed");
                 closeToTarget = true;
-                closeStateThisFrame.Add(true);
+                //closeStateThisFrame.Add(true);
             }
-            else
+            /*else
             {
                 closeToTarget = false;
                 closeStateThisFrame.Add(false);
-            }
+            }*/
 
         }
-        else
+        /*else
         {
             closeToTarget = false;
             closeStateThisFrame.Add(false);
-        }
+        }*/
     }
 
-    private void OnTriggerExit(Collider other)
+    /*private void OnTriggerExit(Collider other)
     {
         if (other.tag.CompareTo("Wall") == 0)
             if (other.gameObject == target.transform.parent.gameObject)
@@ -130,7 +132,7 @@ public class Obstacle_Avoid : MonoBehaviour {
                 closeToTarget = false;
                 closeStateThisFrame.Add(false);
             }
-    }
+    }*/
 
 
     private Vector3 GetMovingDir()

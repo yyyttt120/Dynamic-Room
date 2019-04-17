@@ -25,13 +25,13 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
 
     public override bool Translation_LR(Vector3 targetposition, GameObject wall, int wallnum, bool on, double p1, double p2)
     {
-        print("simulation start");
+        //print("simulation start");
         Vector3 roombaPos;
         int moveDirection;
         double angle;
         double distance;
 
-        roombaPos = FindRoomba(wall.transform.position, wall.transform.forward);
+        roombaPos = FindRoomba(wall.transform.position,wall.transform.forward);
         angle = AngleSigned(wall.transform.right, targetposition - roombaPos, Vector3.up);
         if (angle >= -90 && angle <= 90)
             moveDirection = 1;
@@ -54,7 +54,7 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
                     if (angle < -2)
                     {
                         //print("rotating");
-                        wall.transform.Rotate(new Vector3(0, -angleSpeed * Time.deltaTime, 0));
+                        gameObject.transform.Rotate(new Vector3(0, -angleSpeed * Time.deltaTime, 0));
                         step1on = true;
                     }
                     else
@@ -63,7 +63,7 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
                     if (angle < 178)
                     {
                         //print("rotating");
-                        wall.transform.Rotate(new Vector3(0, -angleSpeed * Time.deltaTime, 0));
+                        gameObject.transform.Rotate(new Vector3(0, -angleSpeed * Time.deltaTime, 0));
                         step1on = true;
                     }
                     else
@@ -72,7 +72,7 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
                     if (angle > 2)
                     {
                         //print("rotating");
-                        wall.transform.Rotate(new Vector3(0, angleSpeed * Time.deltaTime, 0));
+                        gameObject.transform.Rotate(new Vector3(0, angleSpeed * Time.deltaTime, 0));
                         step1on = true;
                     }
                     else
@@ -81,7 +81,7 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
                     if (angle > -178)
                     {
                         //print("rotating");
-                        wall.transform.Rotate(new Vector3(0, angleSpeed * Time.deltaTime, 0));
+                        gameObject.transform.Rotate(new Vector3(0, angleSpeed * Time.deltaTime, 0));
                         step1on = true;
                     }
                     else
@@ -94,7 +94,7 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
             {
                 print("translating");
                 step2on = true;
-                wall.transform.Translate(wall.transform.right * moveDirection * Time.deltaTime * speed,Space.World);
+                gameObject.transform.Translate(gameObject.transform.right * moveDirection * Time.deltaTime * speed,Space.World);
             }
         }
         else
@@ -111,18 +111,18 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
     {
         double angle = AngleSigned(wall.transform.forward, targetdirection, Vector3.up);
         bool rotationOn = true;
-        print("angle =" + angle);
+        //print("angle =" + angle);
         if (angle > 2 || angle < -2)
         {
             if (angle <= 0)
             {
                 rotationOn = true;
-                wall.transform.Rotate(new Vector3(0, -angleSpeed * Time.deltaTime, 0));
+                gameObject.transform.Rotate(new Vector3(0, -angleSpeed * Time.deltaTime, 0));
             }
             else
             {
                 rotationOn = true;
-                wall.transform.Rotate(new Vector3(0, angleSpeed * Time.deltaTime, 0));
+                gameObject.transform.Rotate(new Vector3(0, angleSpeed * Time.deltaTime, 0));
             }
         }
         else

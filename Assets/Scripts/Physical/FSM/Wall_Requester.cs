@@ -32,6 +32,13 @@ public class Wall_Requester : MonoBehaviour {
                 solvedWallList.Add(wall);
             }
         }*/
+        string solvedList = "solved list = ";
+        foreach(GameObject wall_ in solvedWallList)
+        {
+            solvedList += wall_.name + " ";
+        }
+        //print(solvedList);
+
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracker.index);
 
         this.gameObject.transform.position = user.transform.position;
@@ -63,7 +70,6 @@ public class Wall_Requester : MonoBehaviour {
                 if (!solvedWallList.Contains(other.gameObject))
                 {
                     Animator states = statesController.Allocate_wall(other.gameObject);
-                    //solvedWallList.Add(other.gameObject);
                     int counter = states.GetInteger("NearWallCounter") + 1;
                     if (counter > 100)
                         counter = 100;

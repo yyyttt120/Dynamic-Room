@@ -38,7 +38,7 @@ public class VirtualElevator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         bool emerge = button_emergency.GetComponent<ElevatorButton>().GetButton();
-        print("emergency button ="+ emerge);
+        //print("emergency button ="+ emerge);
         if (emerge)
         {
             button_emer = true;

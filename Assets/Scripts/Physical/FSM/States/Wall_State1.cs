@@ -54,19 +54,19 @@ public class Wall_State1 : StateMachineBehaviour {
         //if wall is keeping matching the slider, set P1 to 80 to improve the ability of tracking trajactory
         //and inactive the obstacle avoidance module to keep the wall slide smoothly 
         */
-        if (targetChange)
+        /*if (targetChange)
         {
             Debug.Log(animator.gameObject.name + " targetchange =" + targetChange);
             roboticWall.wallToTarget_controller.SetP1(40);
             animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
-        }
-        if (roboticWall.wallToTarget_controller.Get_State())
+        }*/
+        /*if (roboticWall.wallToTarget_controller.Get_State())
         {
             roboticWall.wallToTarget_controller.SetP1(65);
             
             animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = false;
-        }
-        Debug.Log("slider active: " + slider.activeSelf);
+        }*/
+        //Debug.Log("slider active: " + slider.activeSelf);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
@@ -83,8 +83,8 @@ public class Wall_State1 : StateMachineBehaviour {
         }*/
 
         //reset p1 and obstacle avoidance module
-        roboticWall.wallToTarget_controller.SetP1(40);
-        animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
+        /*roboticWall.wallToTarget_controller.SetP1(40);
+        animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;*/
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here

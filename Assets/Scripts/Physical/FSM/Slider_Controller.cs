@@ -34,10 +34,10 @@ public class Slider_Controller : MonoBehaviour {
             //print("hit point =" + hit.collider.gameObject.name);
             if (hit.collider.gameObject == this.gameObject)
             {
-                print("hit");
+                //print("hit");
                 slider.SetActive(true);
                 //to avoid user and target stay in a staight line which will influece the obstacle avoidance
-                slider.transform.position = new Vector3(hit.point.x+0.15f, transform.position.y, hit.point.z+0.15f);
+                slider.transform.position = new Vector3(hit.point.x, transform.position.y, hit.point.z);
                 slider.transform.forward = hit.normal;
                 visible = true;
             }

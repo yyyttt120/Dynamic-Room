@@ -25,7 +25,7 @@ public class Standby_Requester : MonoBehaviour {
         {
             standby_list_available.Add(transform.GetChild(i).gameObject);
         }
-        print(standby_list_available[0].name);
+        //print(standby_list_available[0].name);
     }
 	
 	// Update is called once per frame
@@ -40,7 +40,7 @@ public class Standby_Requester : MonoBehaviour {
     //allocate a standby point to the robotic wall
     public GameObject Allocate_StandbyPoint(GameObject roboticWall)
     {
-        print(roboticWall.name);
+        //print(roboticWall.name);
         //sort the standby points by the distance between robotic wall and standby point, from small to large
         foreach (GameObject stand in standby_list_available)
         {
