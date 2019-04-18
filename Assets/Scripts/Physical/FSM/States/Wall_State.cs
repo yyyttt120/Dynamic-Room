@@ -9,17 +9,20 @@ public class Wall_State : StateMachineBehaviour {
     private GameObject slider;
     private GameObject user;
     private Wall_Requester wall_requester;
+
+    private bool readyToRelease = false;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         fsmController = GameObject.Find("StatesController").GetComponent<FSMSystem>();
         //if it's from door state, keep the target wall same, else get target wall by controller
         //if (!animator.GetBool("SliderEnterDoor"))
-            targetWall = fsmController.SendToWallState();
+        //targetWall = fsmController.SendToWallState();
         roboticWall.Set_Robotic_Wall(animator.gameObject);
         slider = targetWall.transform.GetChild(0).gameObject;
         user = GameObject.Find("Camera (eye)").gameObject;
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
         wall_requester.SetWallSolved(targetWall);
+        readyToRelease = false;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -28,10 +31,8 @@ public class Wall_State : StateMachineBehaviour {
             slider.transform.position = new Vector3(user.transform.position.x, targetWall.transform.position.y, targetWall.transform.position.z);
         else
             slider.transform.position = new Vector3(targetWall.transform.position.x, targetWall.transform.position.y, user.transform.position.z);*/
-        roboticWall.wallToTarget_controller.Set_Target(slider);
-        roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
         //************************
-        if(wall_requester.GetReleasedWall() == targetWall || !slider.activeSelf || slider == null)
+        if(/*wall_requester.GetReleasedWall() == targetWall ||*/readyToRelease|| !slider.activeSelf || slider == null)
         //***********************
         {
             int counter = animator.GetInteger("NearWallCounter") - 2;
@@ -39,14 +40,16 @@ public class Wall_State : StateMachineBehaviour {
                 counter = -31;
             animator.SetInteger("NearWallCounter", counter);
         }
+        roboticWall.wallToTarget_controller.Set_Target(slider);
+        roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
         //if wall is keeping matching the slider, set P1 to 80 to improve the ability of tracking trajactory
         //and inactive the obstacle avoidance module to keep the wall slide smoothly 
-        if (roboticWall.wallToTarget_controller.Get_State())
+        /*if (roboticWall.wallToTarget_controller.Get_State())
         {
             roboticWall.wallToTarget_controller.SetP1(70);
             animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = false;
         }
-        Debug.Log("slider active: " + slider.activeSelf);
+        Debug.Log("slider active: " + slider.activeSelf);*/
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
@@ -94,9 +97,18 @@ public class Wall_State : StateMachineBehaviour {
             Vector3.Dot(v1, v2)) * Mathf.Rad2Deg;
     }
 
+    public void SetTargetWall(GameObject wall_)
+    {
+        this.targetWall = wall_;
+    }
+
     public GameObject GetWall()
     {
         return targetWall;
     }
 
+    public void SetReadyRelease(bool readyornot)
+    {
+        readyToRelease = readyornot;
+    }
 }

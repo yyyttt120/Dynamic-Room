@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //attached onto the user encounter reference
-//detect the wall condition, when a wall is needed, post a request to FSMSystem
+//maintain a list in which the wall was already alocated a robotic wall
 public class Wall_Requester : MonoBehaviour {
-    public FSMSystem statesController;
     public GameObject user;
-    private List<GameObject> requestWallList;
     private List<GameObject> solvedWallList;
     private GameObject releasedWall;
     private Vector3 colliderSize;
@@ -24,20 +22,12 @@ public class Wall_Requester : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        /*foreach(GameObject wall in requestWallList)
-        {
-            if (statesController.Allocate_wall(wall))
-            {
-                requestWallList.Remove(wall);
-                solvedWallList.Add(wall);
-            }
-        }*/
         string solvedList = "solved list = ";
         foreach(GameObject wall_ in solvedWallList)
         {
             solvedList += wall_.name + " ";
         }
-        //print(solvedList);
+        print(solvedList);
 
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracker.index);
 
@@ -48,14 +38,14 @@ public class Wall_Requester : MonoBehaviour {
         float angle = AngleSigned(transform.forward, device.velocity, Vector3.up);
         if (angle < 90 || angle > -90)
         {
-            gameObject.GetComponent<BoxCollider>().size = colliderSize + device.velocity.magnitude * new Vector3(0, 0, 20f);
-            gameObject.GetComponent<BoxCollider>().center = colliderCenter + device.velocity.magnitude * new Vector3(0, 0, 20f)/2;
+            gameObject.GetComponent<BoxCollider>().size = colliderSize + device.velocity.magnitude * new Vector3(0, 0, 25f);
+            gameObject.GetComponent<BoxCollider>().center = colliderCenter + device.velocity.magnitude * new Vector3(0, 0, 25f)/2 - new Vector3(0,0,5);
         }
 
         //print("requested wall =" + requestWallList[0]);
 	}
 
-    private void OnTriggerStay(Collider other)
+    /*private void OnTriggerStay(Collider other)
     {
         if (other.tag.CompareTo("Wall") == 0)
         {
@@ -77,17 +67,9 @@ public class Wall_Requester : MonoBehaviour {
                 }
             }
 
-            /*if(states != null)
-            {
-                int counter = states.GetInteger("NearWallCounter") + 2;
-                if (counter > 100)
-                    counter = 100;
-                states.SetInteger("NearWallCounter", counter);
-            }*/
-
            
         }
-    }
+    }*/
     //add the wall into sloved list
     public void SetWallSolved(GameObject wall)
     {
@@ -109,7 +91,7 @@ public class Wall_Requester : MonoBehaviour {
             Debug.Log("err: target wall is not in solved list");
     }
 
-    private void OnTriggerExit(Collider other)
+    /*private void OnTriggerExit(Collider other)
     {
         if (other.tag.CompareTo("Wall") == 0)
         {
@@ -118,7 +100,7 @@ public class Wall_Requester : MonoBehaviour {
             
         }
 
-    }
+    }*/
 
     public GameObject GetReleasedWall()
     {

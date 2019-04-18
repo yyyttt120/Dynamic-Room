@@ -226,6 +226,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89d32f3d8af17384bad70b8da0900624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114559190223879404
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bae4c1b0b6949f4298c7b9cd27ac1b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114606993685136744
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -272,18 +284,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6e58c217a96c4c14e8b140721414622a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &114726830266947678
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbb1b30cc1cfcb349831b7a3a334b6f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114806460279468072
@@ -544,7 +544,7 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 3
     m_ConditionEvent: NearWallCounter
-    m_EventTreshold: 98
+    m_EventTreshold: 95
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102233927980624398}
   m_Solo: 0
@@ -684,7 +684,7 @@ AnimatorState:
   - {fileID: 1101978387778028906}
   - {fileID: 1101984165514535700}
   m_StateMachineBehaviours:
-  - {fileID: 114726830266947678}
+  - {fileID: 114559190223879404}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -970,7 +970,7 @@ AnimatorStateMachine:
     m_Position: {x: 396, y: 228, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102956439044085700}
-    m_Position: {x: 1044, y: 132, z: 0}
+    m_Position: {x: 1020, y: 168, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102823966881539892}
     m_Position: {x: 744, y: 84, z: 0}

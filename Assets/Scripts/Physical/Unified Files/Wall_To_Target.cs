@@ -44,9 +44,13 @@ public class Wall_To_Target : MonoBehaviour {
 
         print(gameObject.name + "target =" + target.name + target.transform.parent.name);
         if (target == null)
+        {
             print(this.name + "no target");
+            anim.SetBool("NoTarget", true);
+        }
         else
         {
+            anim.SetBool("NoTarget", false);
             //print(this.name + "target =" + target.name + target.transform.parent.name);
             //print("avoidance = " + avoidance.gameObject.name);
             avoidance.SetDetectDirection(target);
@@ -72,25 +76,25 @@ public class Wall_To_Target : MonoBehaviour {
                 print("no animator");
             else
             {
-                
+
                 if (anim.GetCurrentAnimatorStateInfo(0).IsName("Standby"))
                     err_dis = 0.005f;
                 else
                     err_dis = 0.001f;
             }
-//*****************
-        if (distance > err_dis /*|| !in_turn*/)
-        {
-            //print("translate3:" + start_translate);
-            start_translate = true;
-            //print("translate4:" + start_translate);
-        }
+            //*****************
+            if (distance > err_dis /*|| !in_turn*/)
+            {
+                //print("translate3:" + start_translate);
+                start_translate = true;
+                //print("translate4:" + start_translate);
+            }
 
-        //print("start =" + start);
-        if (Input.GetKeyUp(KeyCode.K))
-        {
-            switch_button = !switch_button;
-        }
+            //print("start =" + start);
+            if (Input.GetKeyUp(KeyCode.K))
+            {
+                switch_button = !switch_button;
+            }
             Color color = Color.blue;
             Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
             if (switch_button)
@@ -123,16 +127,16 @@ public class Wall_To_Target : MonoBehaviour {
                     }
                 }
                 //**********************************************
-                    if (!start_translate /*&& start_rotate*/)
-                    {
-                        //print("rotating");
-                        double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
-                        if (angle> -90 &&angle<90)
-                            start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
-                        else
-                            start_rotate = !controll.Rotation(-target.transform.forward, wall, wallnum, p, d_rotate, true);
+                if (!start_translate /*&& start_rotate*/)
+                {
+                    //print("rotating");
+                    double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
+                    if (angle > -90 && angle < 90)
+                        start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
+                    else
+                        start_rotate = !controll.Rotation(-target.transform.forward, wall, wallnum, p, d_rotate, true);
                 }
-                
+
             }
         }
     }

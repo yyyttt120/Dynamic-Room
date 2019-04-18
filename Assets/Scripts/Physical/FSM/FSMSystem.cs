@@ -57,23 +57,30 @@ public class FSMSystem : MonoBehaviour {
     }*/
 
     //answer the request from Wall_requester and allocate robotic walls to this request
-    public Animator Allocate_wall(GameObject targetWall)
+
+    /*public Animator Allocate_wall(GameObject targetWall,List<Animator> speStateList)
     {
         string distanceList = "distance =";
-        foreach (Animator ani in statesList)
+        speStateList = new List<Animator>();
+        foreach(Animator ani in statesList)
+        {
+            if (!speStateList.Contains(ani))
+                speStateList.Add(ani);
+        }
+        foreach (Animator ani in speStateList)
         {
             distanceList += ani.gameObject.name + DistanceToVirWall(targetWall, ani.gameObject)+ " ";
         }
         print(distanceList);
         // sort the robotic walls based on the distance from target virtual wall
-        statesList.Sort(delegate (Animator phyW1, Animator phyW2)
+        speStateList.Sort(delegate (Animator phyW1, Animator phyW2)
         {
             if (DistanceToVirWall(targetWall, phyW1.gameObject) > DistanceToVirWall(targetWall, phyW2.gameObject))
                 return 1;
             else
                 return -1;
         });
-        foreach( Animator states in statesList)
+        foreach( Animator states in speStateList)
         {
             if (states.GetCurrentAnimatorStateInfo(0).IsName("Standby"))
             {
@@ -82,13 +89,18 @@ public class FSMSystem : MonoBehaviour {
                 if (counter > 100)
                     counter = 100;
                 states.SetInteger("NearWallCounter", counter);*/
-                wall = targetWall;
-                //Transform_StandbyToWall(states, wall);
-                return states;
-            }
-        }
-        Debug.Log("no robotic wall is in standby state");
-        return null;
+    /* wall = targetWall;
+     //Transform_StandbyToWall(states, wall);
+     return states;
+ }
+}
+Debug.Log("no robotic wall is in standby state");
+return null;
+}*/
+
+    public List<Animator> GetStatesList()
+    {
+        return statesList;
     }
 
     public Animator FreeWall(GameObject wall)
@@ -127,11 +139,6 @@ public class FSMSystem : MonoBehaviour {
         if (counter < -100)
             counter = -100;
         states.SetInteger(name, counter);
-    }
-
-    public List<Animator> GetStatesList()
-    {
-        return statesList;
     }
 
     //****************** transform functions *************************
