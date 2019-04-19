@@ -13,7 +13,8 @@ public class Slider_Controller : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         slider = transform.GetChild(0).gameObject;
-        user = GameObject.Find("Camera (eye)").gameObject;
+        //user = GameObject.Find("Camera (eye)").gameObject;
+        user = GameObject.Find("Cylinder").gameObject;
     }
 	
 	// Update is called once per frame

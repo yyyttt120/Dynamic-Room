@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class User_Follower_Avoidance : MonoBehaviour {
-    GameObject user;
+    public GameObject user;
 	// Use this for initialization
 	void Start () {
-        user = GameObject.Find("Camera (eye)");
+        //user = GameObject.Find("Camera (eye)");
 	}
 	
 	// Update is called once per frame

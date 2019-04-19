@@ -7,11 +7,11 @@ public class Fog_Controll : MonoBehaviour {
 
     private Vector3 closePos;
     private bool windowOpened;
-    private GameObject mylight;
+    public GameObject mylight;
 	// Use this for initialization
 	void Start () {
         closePos = transform.position;
-        mylight = GameObject.Find("Light");
+        //mylight = GameObject.Find("Light");
 	}
 	
 	// Update is called once per frame

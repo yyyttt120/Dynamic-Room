@@ -23,6 +23,7 @@ public class Wall_State : StateMachineBehaviour {
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
         wall_requester.SetWallSolved(targetWall);
         readyToRelease = false;
+        Debug.Log("wall enter");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -37,7 +38,17 @@ public class Wall_State : StateMachineBehaviour {
         {
             int counter = animator.GetInteger("NearWallCounter") - 2;
             if (counter < -31)
+            {
                 counter = -31;
+
+                if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
+                    wall_requester.ReleaseWall(targetWall);
+                else
+                {
+                    Debug.Log("dont release" + targetWall.name);
+                    wall_requester.SetWallSolved(targetWall);
+                }
+            }
             animator.SetInteger("NearWallCounter", counter);
         }
         roboticWall.wallToTarget_controller.Set_Target(slider);
@@ -56,12 +67,13 @@ public class Wall_State : StateMachineBehaviour {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         roboticWall.wallToTarget_controller.Robot_Move_Switch(false);
         //if next state is door state, keep the target wall in sloved list, else release the target wall
-        Debug.Log("slider enter ele =" + animator.GetBool("SlideEnterElevator"));
+        //Debug.Log("slider enter ele =" + animator.GetBool("SlideEnterElevator"));
+        Debug.Log("wall exit");
         if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
-            wall_requester.ReleaseWall(targetWall);
+        wall_requester.ReleaseWall(targetWall);
         else
         {
-            Debug.Log("dont release" + targetWall.name);
+            //Debug.Log("dont release" + targetWall.name);
             wall_requester.SetWallSolved(targetWall);
         }
 

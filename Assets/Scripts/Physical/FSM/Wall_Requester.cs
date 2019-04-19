@@ -7,15 +7,19 @@ using UnityEngine;
 public class Wall_Requester : MonoBehaviour {
     public GameObject user;
     private List<GameObject> solvedWallList;
+    private List<Animator> roboWallList;
     private GameObject releasedWall;
     private Vector3 colliderSize;
     private Vector3 colliderCenter;
     public SteamVR_TrackedObject user_tracker = null;
+    public FSMSystem roboticwallPool;
 
     // Use this for initialization
     void Start() {
         //requestWallList = new List<GameObject>();
         solvedWallList = new List<GameObject>();
+        roboWallList = new List<Animator>();
+        roboWallList = roboticwallPool.GetStatesList();
         colliderSize = gameObject.GetComponent<BoxCollider>().size;
         colliderCenter = gameObject.GetComponent<BoxCollider>().center;
     }
@@ -35,15 +39,67 @@ public class Wall_Requester : MonoBehaviour {
         this.gameObject.transform.eulerAngles = new Vector3(0, user.transform.eulerAngles.y, 0);
 
         //adjust the size of collider to based on the user's velocity
-        float angle = AngleSigned(transform.forward, device.velocity, Vector3.up);
-        if (angle < 90 || angle > -90)
+        //float angle = AngleSigned(transform.forward, device.velocity, Vector3.up);
+        /*if (angle < 90 || angle > -90)
         {
             gameObject.GetComponent<BoxCollider>().size = colliderSize + device.velocity.magnitude * new Vector3(0, 0, 25f);
             gameObject.GetComponent<BoxCollider>().center = colliderCenter + device.velocity.magnitude * new Vector3(0, 0, 25f)/2 - new Vector3(0,0,5);
-        }
+        }*/
 
         //print("requested wall =" + requestWallList[0]);
-	}
+
+        /*foreach (GameObject wall_solved in solvedWallList)
+        {
+            bool find = false;
+            foreach (Animator ani in roboWallList)
+            {
+                if (ani.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
+                    if (ani.GetBehaviour<Wall_State>().GetWall() == wall_solved)
+                    {
+                        find = true;
+                        break;
+                    }
+            }
+            if (!find)
+                solvedWallList.Remove(wall_solved);
+
+        }*/
+    }
+
+    private void LateUpdate()
+    {
+        //make sure all the objects in solved wall list is legal
+        foreach(GameObject wall_solved in solvedWallList)
+        {
+            bool find = false;
+            try
+            {
+                Animator ani = wall_solved.GetComponent<Robotic_Wall_Requester>().GetMatchRoboWall();
+                if (ani.GetBehaviour<Wall_State>().GetWall() == gameObject)
+                    continue;
+                else
+                    solvedWallList.Remove(wall_solved);
+            }
+            catch(System.NullReferenceException e1)
+            {
+                solvedWallList.Remove(wall_solved);
+                print(wall_solved.name + " this solved wall have no RW");
+            }
+            
+            /*foreach(Animator ani in roboWallList)
+            {
+                if (ani.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
+                    if (ani.GetBehaviour<Wall_State>().GetWall() == wall_solved)
+                    {
+                        find = true;
+                        break;
+                    }
+            }
+            if (!find)
+                solvedWallList.Remove(wall_solved);*/
+
+        }
+    }
 
     /*private void OnTriggerStay(Collider other)
     {

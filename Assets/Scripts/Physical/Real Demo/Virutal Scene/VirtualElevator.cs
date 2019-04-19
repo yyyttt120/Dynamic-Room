@@ -47,7 +47,7 @@ public class VirtualElevator : MonoBehaviour {
         {
             button_ele = true;
         }
-        elevatorSwitch = GameObject.Find("Elevator_Switch_Real").transform.GetChild(0).gameObject;
+        //elevatorSwitch = GameObject.Find("Elevator_Switch_Real").transform.GetChild(0).gameObject;
         //switch_ele = elevatorSwitch.GetComponent<Swithc_Elevator>().GetSwitcher();
         userEntered = ele_Indicator.GetComponent<Elevator_Enter_Indicator>().GetUserEntered();
         //print("button_ele =" + button_ele);

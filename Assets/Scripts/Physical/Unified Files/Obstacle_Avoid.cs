@@ -78,7 +78,7 @@ public class Obstacle_Avoid : MonoBehaviour {
                 Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
                 if (hit.collider.gameObject != gameObject)
                     {
-                        print(gameObject.name + "ray hit" + hit.collider.gameObject.name);
+                        //print(gameObject.name + "ray hit" + hit.collider.gameObject.name);
                         avoidanceVector += new Vector3(hit.normal.x, 0, hit.normal.z).normalized * force;
                         avoidanceVector.y = 0;
                     }
