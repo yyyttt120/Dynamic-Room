@@ -7,7 +7,7 @@ using UnityEngine;
 public class Wall_Requester : MonoBehaviour {
     public GameObject user;
     private List<GameObject> solvedWallList;
-    private List<Animator> roboWallList;
+    //private List<Animator> roboWallList;
     private GameObject releasedWall;
     private Vector3 colliderSize;
     private Vector3 colliderCenter;
@@ -18,8 +18,8 @@ public class Wall_Requester : MonoBehaviour {
     void Start() {
         //requestWallList = new List<GameObject>();
         solvedWallList = new List<GameObject>();
-        roboWallList = new List<Animator>();
-        roboWallList = roboticwallPool.GetStatesList();
+        //roboWallList = new List<Animator>();
+        //roboWallList = roboticwallPool.GetStatesList();
         colliderSize = gameObject.GetComponent<BoxCollider>().size;
         colliderCenter = gameObject.GetComponent<BoxCollider>().center;
     }
@@ -69,7 +69,7 @@ public class Wall_Requester : MonoBehaviour {
     private void LateUpdate()
     {
         //make sure all the objects in solved wall list is legal
-        foreach(GameObject wall_solved in solvedWallList)
+       /* foreach(GameObject wall_solved in solvedWallList)
         {
             bool find = false;
             try
@@ -84,21 +84,9 @@ public class Wall_Requester : MonoBehaviour {
             {
                 solvedWallList.Remove(wall_solved);
                 print(wall_solved.name + " this solved wall have no RW");
-            }
+            }*/
             
-            /*foreach(Animator ani in roboWallList)
-            {
-                if (ani.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
-                    if (ani.GetBehaviour<Wall_State>().GetWall() == wall_solved)
-                    {
-                        find = true;
-                        break;
-                    }
-            }
-            if (!find)
-                solvedWallList.Remove(wall_solved);*/
 
-        }
     }
 
     /*private void OnTriggerStay(Collider other)

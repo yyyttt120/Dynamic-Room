@@ -6,9 +6,9 @@ public class FSMSystem : MonoBehaviour {
     private List<Animator> statesList = new List<Animator>();
 
     public GameObject r_wall1;
-    /*public GameObject r_wall2;
+    public GameObject r_wall2;
     public GameObject r_wall3;
-    public GameObject r_wall4;*/
+    public GameObject r_wall4;
 
     private GameObject wall;//virtual wall wait be allocated a robotic wall
                             // Use this for initialization
@@ -22,11 +22,11 @@ public class FSMSystem : MonoBehaviour {
         //AddState(r_wall2.GetComponent<FSMState>());
         if (r_wall1.activeSelf)
             statesList.Add(r_wall1.GetComponent<Animator>());
-        /*if(r_wall2.activeSelf)
+        if(r_wall2.activeSelf)
             statesList.Add(r_wall2.GetComponent<Animator>());
         if (r_wall3.activeSelf)
             statesList.Add(r_wall3.GetComponent<Animator>());
-        if (r_wall4.activeSelf)
+        /*if (r_wall4.activeSelf)
             statesList.Add(r_wall4.GetComponent<Animator>());*/
     }
 

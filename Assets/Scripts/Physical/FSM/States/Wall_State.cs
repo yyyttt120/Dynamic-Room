@@ -23,7 +23,7 @@ public class Wall_State : StateMachineBehaviour {
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
         wall_requester.SetWallSolved(targetWall);
         readyToRelease = false;
-        Debug.Log("wall enter");
+        //Debug.Log("wall enter");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -68,7 +68,7 @@ public class Wall_State : StateMachineBehaviour {
         roboticWall.wallToTarget_controller.Robot_Move_Switch(false);
         //if next state is door state, keep the target wall in sloved list, else release the target wall
         //Debug.Log("slider enter ele =" + animator.GetBool("SlideEnterElevator"));
-        Debug.Log("wall exit");
+        //Debug.Log("wall exit");
         if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
         wall_requester.ReleaseWall(targetWall);
         else
@@ -78,8 +78,8 @@ public class Wall_State : StateMachineBehaviour {
         }
 
         //reset p1 and obstacle avoidance module
-        roboticWall.wallToTarget_controller.SetP1(40);
-        animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
+        /*roboticWall.wallToTarget_controller.SetP1(40);
+        animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;*/
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here

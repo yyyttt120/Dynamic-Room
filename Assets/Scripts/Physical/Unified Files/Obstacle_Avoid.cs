@@ -32,22 +32,22 @@ public class Obstacle_Avoid : MonoBehaviour {
     {
         //closeStateThisFrame = new List<bool>();
         closeToTarget = false;
+        try
+        {
+            target = rWall.wallToTarget_controller.GetTarget();
+            //print("target =" + target.name + " " + target.transform.parent.name);
+        }
+        catch (System.NullReferenceException e1)
+        {
+            print("error" + e1.Message);
+            target = null;
+        }
     }
 
     // Update is called once per frame
     void Update() {
         //print("tracker" + tracker.gameObject.name);
         //device = SteamVR_Controller.Input((int)tracker.index);
-        try
-        {
-            target = rWall.wallToTarget_controller.GetTarget();
-            //print("target =" + target.name + " " + target.transform.parent.name);
-        }
-        catch(System.NullReferenceException e1)
-        {
-            print("error"+e1.Message);
-            target = null;
-        }
         // *************
         
         /*foreach (bool close in closeStateThisFrame)
