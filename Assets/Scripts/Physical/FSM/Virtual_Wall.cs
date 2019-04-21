@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //attach onto virtual wall objects
-public class Robotic_Wall_Requester : MonoBehaviour
+public class Virtual_Wall : MonoBehaviour
 {
-    public FSMSystem statesController;
-    public Wall_Requester solvedListController;// the user's reference
-
+    private FSMSystem statesController;
+    private Wall_Requester solvedListController;// the user's reference
     private Animator matchRoboticWall;
     private List<Animator> statesList;
 

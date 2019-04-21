@@ -9,12 +9,18 @@ public class Robotic_Wall   {
     public Wall_To_Target wallToTarget_controller;
     public RoombaFeedback_Test roomba_controller;
     public RoombaFeedback_Velocity roomba_controller_vel;
+    public Animator stateController;
 
     public bool Set_Robotic_Wall(GameObject r_wall)
     {
         this.robotic_wall = r_wall;
         if (r_wall.GetComponent<Wall_To_Target>() != null)
             this.wallToTarget_controller = r_wall.GetComponent<Wall_To_Target>();
+        else
+            return false;
+
+        if (r_wall.GetComponent<Animator>() != null)
+            this.roomba_controller_vel = r_wall.GetComponent<RoombaFeedback_Velocity>();
         else
             return false;
 
