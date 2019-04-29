@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Robotic_Wall   {
+public class Robotic_Wall: MonoBehaviour
+{
 
     // Use this for initialization
     public GameObject robotic_wall;

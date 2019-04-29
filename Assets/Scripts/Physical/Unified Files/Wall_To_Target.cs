@@ -40,8 +40,6 @@ public class Wall_To_Target : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         anim = gameObject.GetComponent<Animator>();
-
-
         print(gameObject.name + "target =" + target.name + target.transform.parent.name);
         if (target == null)
         {

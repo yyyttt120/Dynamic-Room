@@ -13,8 +13,8 @@ public class Slider_Controller : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         slider = transform.GetChild(0).gameObject;
-        //user = GameObject.Find("Camera (eye)").gameObject;
-        user = GameObject.Find("Cylinder").gameObject;
+        user = GameObject.Find("Camera (eye)").gameObject;
+        //user = GameObject.Find("Cylinder").gameObject;
     }
 	
 	// Update is called once per frame
@@ -29,7 +29,7 @@ public class Slider_Controller : MonoBehaviour {
             raydir = -transform.forward;
         raydir.y = 0;
         Color color = Color.green;
-        Debug.DrawRay(user.transform.position, raydir.normalized * 2, color, 0.1f, true);
+        //Debug.DrawRay(user.transform.position, raydir.normalized * 2, color, 0.1f, true);
         if (Physics.Raycast(user.transform.position, raydir, out hit, 2f, layer))
         {
             //print("hit point =" + hit.collider.gameObject.name);

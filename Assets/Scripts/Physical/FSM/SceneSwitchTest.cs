@@ -9,13 +9,13 @@ public class SceneSwitchTest : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         noneDestroyList = new List<GameObject>();
-        AddNoneDestroy(GameObject.Find("PTK_Elevator_2Floors"));
+        /*AddNoneDestroy(GameObject.Find("PTK_Elevator_2Floors"));
         AddNoneDestroy(GameObject.Find("Roomba"));
         AddNoneDestroy(GameObject.Find("[CameraRig]"));
         AddNoneDestroy(GameObject.Find("Stand_by"));
         AddNoneDestroy(GameObject.Find("StatesController"));
         AddNoneDestroy(GameObject.Find("User_Encounter_Area"));
-        AddNoneDestroy(GameObject.Find("Virtual Scene Controller"));
+        AddNoneDestroy(GameObject.Find("Virtual Scene Controller"));*/
         //AddNoneDestroy(GameObject.Find("Apartment Door - Wooden - No Script"));
     }
 	

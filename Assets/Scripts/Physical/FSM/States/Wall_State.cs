@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wall_State : StateMachineBehaviour {
+public class Wall_State_for2 : StateMachineBehaviour {
     private FSMSystem fsmController;
     private GameObject targetWall;
     private Robotic_Wall roboticWall = new Robotic_Wall();

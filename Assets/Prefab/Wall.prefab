@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 7506137794096708974}
   - component: {fileID: 1070916718534603528}
   - component: {fileID: 7678731880054916273}
+  - component: {fileID: 802731106633083344}
   m_Layer: 8
   m_Name: Wall
   m_TagString: Wall
@@ -227,5 +228,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07b1d24325b20c84b94ab20f11776ebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statesController: {fileID: 0}
-  solvedListController: {fileID: 0}
+--- !u!114 &802731106633083344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7506137794096708975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0760b099e3d7a0b4dbfff4ee43200060, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IPs: []

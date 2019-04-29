@@ -70,12 +70,12 @@ public class Obstacle_Avoid : MonoBehaviour {
             //{
                 //print("huo" + gameObject.name);
                 Color color = Color.red;
-                Debug.DrawRay(this.transform.position, wallPredict.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
+                //Debug.DrawRay(this.transform.position, wallPredict.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
                 if (Physics.Raycast(this.transform.position, wallPredict.normalized, out hit, Mathf.Min(detectRange, wallPredict.magnitude), layMask))
                 {
                 //
                 Color color_y = Color.yellow;
-                Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
+                //Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
                 if (hit.collider.gameObject != gameObject)
                     {
                         //print(gameObject.name + "ray hit" + hit.collider.gameObject.name);

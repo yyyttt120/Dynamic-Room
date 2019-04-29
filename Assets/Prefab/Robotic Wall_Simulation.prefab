@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 1304166475031998247}
   - component: {fileID: 1304166475031998244}
   - component: {fileID: 1304166475031998267}
+  - component: {fileID: 8954843380781632735}
   m_Layer: 10
   m_Name: Robotic Wall_Simulation
   m_TagString: Untagged
@@ -318,6 +319,23 @@ CapsuleCollider:
   m_Height: 2.55
   m_Direction: 1
   m_Center: {x: 0, y: 0.69, z: 0}
+--- !u!114 &8954843380781632735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1304166475031998242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2949d89ec06d9b489cdff859e49e5af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotic_wall: {fileID: 1304166475031998242}
+  wallToTarget_controller: {fileID: 1304166475031998265}
+  roomba_controller: {fileID: 1304166475031998247}
+  roomba_controller_vel: {fileID: 0}
+  stateController: {fileID: 1304166475031998244}
 --- !u!1 &1304166475788224785
 GameObject:
   m_ObjectHideFlags: 0
