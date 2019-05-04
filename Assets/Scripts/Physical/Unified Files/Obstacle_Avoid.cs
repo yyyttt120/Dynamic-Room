@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Obstacle_Avoid : MonoBehaviour {
+public class Obstacle_Avoid : MonoBehaviour
+{
 
     private SteamVR_TrackedObject tracker;
     private SteamVR_Controller.Device device;
@@ -19,8 +20,9 @@ public class Obstacle_Avoid : MonoBehaviour {
     private List<bool> closeStateThisFrame;//record is this robotic wall get close to target in this frame
 
     private bool closeToTarget;//true when this robotic wall is close to it's target virtual wall
-                        // Use this for initialization
-    void Start() {
+                               // Use this for initialization
+    void Start()
+    {
         rWall = new Robotic_Wall();
         rWall.Set_Robotic_Wall(this.gameObject);
         //tracker = transform.parent.gameObject.GetComponent<SteamVR_TrackedObject>();
@@ -37,6 +39,7 @@ public class Obstacle_Avoid : MonoBehaviour {
             target = rWall.wallToTarget_controller.GetTarget();
             //print("target =" + target.name + " " + target.transform.parent.name);
         }
+
         catch (System.NullReferenceException e1)
         {
             print("error" + e1.Message);
@@ -45,11 +48,12 @@ public class Obstacle_Avoid : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         //print("tracker" + tracker.gameObject.name);
         //device = SteamVR_Controller.Input((int)tracker.index);
         // *************
-        
+
         /*foreach (bool close in closeStateThisFrame)
         {
             closeToTarget = false;
@@ -62,38 +66,65 @@ public class Obstacle_Avoid : MonoBehaviour {
         //print("angle = " + angle);
         //print("distance ="+ gameObject.name + wallPredict.magnitude);
         //print(gameObject.name + " target distance = " + wallPredict.magnitude);
-        
-            if (/*wallPredict.magnitude > nonAvoidRange*/!closeToTarget)
-            //if (wallPredict.magnitude > nonAvoidRange)
-            {
+        Vector3 moveDirection;
+        if (Vector3.Dot(wallPredict.normalized, gameObject.transform.right) > 0)
+            moveDirection = gameObject.transform.right;
+        else
+            moveDirection = -gameObject.transform.right;
+
+
+        if (/*wallPredict.magnitude > nonAvoidRange*/!closeToTarget)
+        //if (wallPredict.magnitude > nonAvoidRange)
+        {
             //if (angle > -20 && angle < 20 || angle > 160 && angle < 180 || angle > -180 && angle < -160)// when the wall are moving ahead (not rotating)
             //{
-                //print("huo" + gameObject.name);
-                Color color = Color.red;
-                //Debug.DrawRay(this.transform.position, wallPredict.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
-                if (Physics.Raycast(this.transform.position, wallPredict.normalized, out hit, Mathf.Min(detectRange, wallPredict.magnitude), layMask))
-                {
+            //print("huo" + gameObject.name);
+            Color color = Color.red;
+            Debug.DrawRay(this.transform.position, moveDirection.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
+            if (Physics.Raycast(this.transform.position, moveDirection.normalized, out hit, Mathf.Min(detectRange, wallPredict.magnitude), layMask))
+            {
                 //
                 Color color_y = Color.yellow;
-                //Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
+                Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
                 if (hit.collider.gameObject != gameObject)
+                {
+                    Vector3 hitNormal = hit.normal;
+                    hitNormal.y = 0;
+                    Vector3 paraSpeed = Vector3.Cross(hitNormal, Vector3.up).normalized;
+                    Animator ani = gameObject.GetComponent<Animator>();
+                    //when the robotic wall is in wall_state, force it always avoiding obstacle from the direction which is away from the virutal wall
+                    if (ani.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
                     {
-                        //print(gameObject.name + "ray hit" + hit.collider.gameObject.name);
-                        avoidanceVector += new Vector3(hit.normal.x, 0, hit.normal.z).normalized * force;
-                        avoidanceVector.y = 0;
+                        Vector3 forward = gameObject.GetComponent<Wall_To_Target>().GetTarget().transform.forward;
+                        if (Vector3.Dot(forward, paraSpeed) > 0)
+                            paraSpeed = -paraSpeed;
+                        else
+                            paraSpeed = paraSpeed;
                     }
+                    //when the robotic wall is not in wall_state, choose the most efficient direction
+                    else
+                    {
+                        if (Vector3.Dot(moveDirection.normalized, paraSpeed) > 0)
+                            paraSpeed = paraSpeed;
+                        else
+                            paraSpeed = -paraSpeed;
+                    }
+                    //print(gameObject.name + "ray hit" + hit.collider.gameObject.name);
+                    avoidanceVector += paraSpeed * force;
+                    avoidanceVector.y = 0;
+                }
                 /*else
                     avoidanceVector = Vector3.zero;*/
-                double maxAvoidanceVector = wallPredict.magnitude * 0.8;
+                double maxAvoidanceVector = 1 / hit.distance * 10;
                 if (avoidanceVector.magnitude > maxAvoidanceVector)
                     avoidanceVector = avoidanceVector.normalized * (float)maxAvoidanceVector;
 
-                }
-                else
-                    avoidanceVector /= 1.05f;
+            }
+            else
+                avoidanceVector /= 1.05f;
             //}
             //else
-               // avoidanceVector = Vector3.zero;
+            // avoidanceVector = Vector3.zero;
         }
         else
             avoidanceVector = Vector3.zero;

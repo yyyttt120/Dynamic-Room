@@ -17,7 +17,7 @@ public class Wall_To_Target : MonoBehaviour {
     public int d_rotate = 200;//parameter for rotation
 
     //**** turn it false in real demo ***************
-    private bool switch_button = false;
+    public bool switch_button = false;
     //**************
     private bool start = true;//enable the whole system, controlled by a public method
     private bool start_translate = true;//enable the translation

@@ -106,12 +106,12 @@ public class RoboticWall_Requester : MonoBehaviour
                         //print("robot wall =" + states.name);
                         matchRoboticWall = states;
                         int counter = states.GetInteger("NearWallCounter") + 1;
-                        if (counter >= 30)
+                        if (counter >= 10)
                         {
                             userClose = true;
                             solvedListController.SetWallSolved(this.gameObject);
                             states.GetBehaviour<Wall_State>().SetTargetWall(this.gameObject);
-                            counter = 30;
+                            counter = 10;
                         }
                         states.SetInteger("NearWallCounter", counter);
                     }
@@ -130,8 +130,9 @@ public class RoboticWall_Requester : MonoBehaviour
             //matchRoboticWall.SetBool("AllocateRW", false);
             solvedListController.ReleaseWall(this.gameObject);
             userClose = false;
-            //matchRoboticWall.GetBehaviour<Wall_State>().SetReadyRelease(true);
-            matchRoboticWall.GetBehaviour<Wall_State>().SetReadyRelease(true);
+            if(matchRoboticWall != null)
+                matchRoboticWall.GetBehaviour<Wall_State>().SetReadyRelease(true);
+            //matchRoboticWall = null;
             waitAllocate = true;
             waitCount = 0;
         }

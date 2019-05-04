@@ -6,14 +6,20 @@ using UnityEngine;
 public class Slider_Controller : MonoBehaviour {
     public enum wallType { flat, curve};
     public wallType thisWallType = wallType.flat;
+    public enum ControllerType { simulation,real};
+    public ControllerType thisController = ControllerType.real;
     private GameObject slider;
     private GameObject user;
     private LayerMask layer = 1 << 8;
     private bool visible = false;// if the wall can be seen by user (be hit by raycast), it's visible
-	// Use this for initialization
-	void Start () {
+                                 // Use this for initialization
+    void Start()
+    {
         slider = transform.GetChild(0).gameObject;
-        user = GameObject.Find("Camera (eye)").gameObject;
+        if (thisController == ControllerType.real)
+            user = GameObject.Find("Camera (eye)").gameObject;
+        else
+            user = GameObject.Find("Cylinder").gameObject;
         //user = GameObject.Find("Cylinder").gameObject;
     }
 	
@@ -30,7 +36,12 @@ public class Slider_Controller : MonoBehaviour {
         raydir.y = 0;
         Color color = Color.green;
         //Debug.DrawRay(user.transform.position, raydir.normalized * 2, color, 0.1f, true);
-        if (Physics.Raycast(user.transform.position, raydir, out hit, 2f, layer))
+        float range;
+        if (thisController == ControllerType.real)
+            range = 2f;
+        else
+            range = 10f;
+        if (Physics.Raycast(user.transform.position, raydir, out hit, range, layer))
         {
             //print("hit point =" + hit.collider.gameObject.name);
             if (hit.collider.gameObject == this.gameObject)

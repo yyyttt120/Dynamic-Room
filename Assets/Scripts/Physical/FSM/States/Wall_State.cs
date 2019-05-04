@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wall_State_for2 : StateMachineBehaviour {
+public class Wall_State : StateMachineBehaviour {
     private FSMSystem fsmController;
     private GameObject targetWall;
     private Robotic_Wall roboticWall = new Robotic_Wall();
@@ -32,6 +32,7 @@ public class Wall_State_for2 : StateMachineBehaviour {
             slider.transform.position = new Vector3(user.transform.position.x, targetWall.transform.position.y, targetWall.transform.position.z);
         else
             slider.transform.position = new Vector3(targetWall.transform.position.x, targetWall.transform.position.y, user.transform.position.z);*/
+        Debug.Log("wall_state");
         //************************
         if(/*wall_requester.GetReleasedWall() == targetWall ||*/readyToRelease|| !slider.activeSelf || slider == null)
         //***********************

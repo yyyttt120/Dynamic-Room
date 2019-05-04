@@ -28,6 +28,7 @@ public class Wall_State1 : StateMachineBehaviour {
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+        Debug.Log("wall_state1");
         /*if (Judge_Direction(targetWall))
             slider.transform.position = new Vector3(user.transform.position.x, targetWall.transform.position.y, targetWall.transform.position.z);
         else

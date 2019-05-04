@@ -132,7 +132,7 @@ public class Wall_Requester : MonoBehaviour {
             solvedWallList.Remove(wall);
         }
         else
-            Debug.Log("err: target wall is not in solved list");
+            Debug.Log($"err: target wall {wall.name} is not in solved list");
     }
 
     /*private void OnTriggerExit(Collider other)
