@@ -12,5 +12,6 @@ public class User_Follower_Avoidance : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         transform.position = new Vector3(user.transform.position.x, 0f, user.transform.position.z);
+        transform.forward = new Vector3(user.transform.forward.x, 0f, user.transform.forward.z);
 	}
 }

@@ -38,9 +38,9 @@ public class Slider_Controller : MonoBehaviour {
         //Debug.DrawRay(user.transform.position, raydir.normalized * 2, color, 0.1f, true);
         float range;
         if (thisController == ControllerType.real)
-            range = 2f;
-        else
             range = 10f;
+        else
+            range = 2f;
         if (Physics.Raycast(user.transform.position, raydir, out hit, range, layer))
         {
             //print("hit point =" + hit.collider.gameObject.name);

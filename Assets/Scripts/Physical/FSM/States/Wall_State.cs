@@ -32,28 +32,36 @@ public class Wall_State : StateMachineBehaviour {
             slider.transform.position = new Vector3(user.transform.position.x, targetWall.transform.position.y, targetWall.transform.position.z);
         else
             slider.transform.position = new Vector3(targetWall.transform.position.x, targetWall.transform.position.y, user.transform.position.z);*/
-        Debug.Log("wall_state");
         //************************
-        if(/*wall_requester.GetReleasedWall() == targetWall ||*/readyToRelease|| !slider.activeSelf || slider == null)
-        //***********************
-        {
-            int counter = animator.GetInteger("NearWallCounter") - 2;
-            if (counter < -31)
-            {
-                counter = -31;
-
-                if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
-                    wall_requester.ReleaseWall(targetWall);
-                else
-                {
-                    Debug.Log("dont release" + targetWall.name);
-                    wall_requester.SetWallSolved(targetWall);
-                }
-            }
-            animator.SetInteger("NearWallCounter", counter);
-        }
+        slider = targetWall.transform.GetChild(0).gameObject;
         roboticWall.wallToTarget_controller.Set_Target(slider);
         roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
+        //Debug.Log("wall_state");
+        try
+        {
+            if (/*wall_requester.GetReleasedWall() == targetWall ||*/readyToRelease || !slider.activeSelf || slider == null)
+            //***********************
+            {
+                int counter = animator.GetInteger("NearWallCounter") - 2;
+                if (counter < -31)
+                {
+                    counter = -31;
+
+                    if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
+                        wall_requester.ReleaseWall(targetWall);
+                    else
+                    {
+                        Debug.Log("dont release" + targetWall.name);
+                        wall_requester.SetWallSolved(targetWall);
+                    }
+                }
+                animator.SetInteger("NearWallCounter", counter);
+            }
+        }
+        catch(System.NullReferenceException err)
+        {
+            Debug.Log(animator.gameObject.name + err.Message);
+        }
         //if wall is keeping matching the slider, set P1 to 80 to improve the ability of tracking trajactory
         //and inactive the obstacle avoidance module to keep the wall slide smoothly 
         /*if (roboticWall.wallToTarget_controller.Get_State())

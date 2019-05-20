@@ -32,7 +32,7 @@ public class Wall_State_for2 : StateMachineBehaviour {
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        Debug.Log("wall_statefor2");
+        //Debug.Log("wall_statefor2");
         try
         {
             slider = targetWall.transform.GetChild(0).gameObject;
@@ -60,7 +60,7 @@ public class Wall_State_for2 : StateMachineBehaviour {
             }
             animator.SetInteger("NearWallCounter", counter);
         }*/
-        //roboticWall.wallToTarget_controller.Set_Target(slider);
+        roboticWall.wallToTarget_controller.Set_Target(slider);
         roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
     }
 

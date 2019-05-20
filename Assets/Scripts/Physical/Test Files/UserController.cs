@@ -19,8 +19,8 @@ public class UserController : MonoBehaviour
         if (Input.GetKey(KeyCode.DownArrow))
             transform.Translate(transform.forward * -speed * Time.deltaTime,Space.World);
         if (Input.GetKey(KeyCode.LeftArrow))
-            transform.Rotate(new Vector3(0, -speed * Time.deltaTime * 120, 0));
+            transform.Rotate(new Vector3(0, -speed * Time.deltaTime * 180, 0));
         if (Input.GetKey(KeyCode.RightArrow))
-            transform.Rotate(new Vector3(0, speed * Time.deltaTime * 120, 0));
+            transform.Rotate(new Vector3(0, speed * Time.deltaTime * 360, 0));
     }
 }

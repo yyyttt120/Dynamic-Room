@@ -6,9 +6,11 @@ using UnityEngine;
 public class RoboticWall_Requester : MonoBehaviour
 {
     private FSMSystem statesController;
-    private Wall_Requester solvedListController;// the user's reference
+    //private Wall_Requester solvedListController;// the user's reference
     private List<Animator> statesList;
     private Animator matchRoboticWall;
+    private Animator states = null;
+    private VirtualWall vWall;
 
     private int waitCount = 0;
 
@@ -18,8 +20,8 @@ public class RoboticWall_Requester : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        vWall = gameObject.GetComponent<VirtualWall>();
         statesController = GameObject.Find("StatesController").GetComponent<FSMSystem>();
-        solvedListController = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
         statesList = new List<Animator>();
     }
 
@@ -76,70 +78,96 @@ public class RoboticWall_Requester : MonoBehaviour
 
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag.CompareTo("User_Detect_Area") == 0)
+        {
+            if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null)
+            {
+                waitCount = 0;
+            }
+        }
+    }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.tag.CompareTo("User_Detect_Area") == 0)
         {
+            print($"{gameObject.name} detect");
             //print("wall in:" + gameObject.name);
             //make sure the encountered wall woulden't be released
             //if (releasedWall == other.gameObject)
             //releasedWall = null;
             //check if this wall isn't covered by other walls
             //Slider_Controller slider_Con = gameObject.GetComponent<Slider_Controller>();
-            userClose = true;
-            if (gameObject.transform.GetChild(0).gameObject.activeSelf)
+            //userClose = true;
+
+            if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null)
             {
-                if (!solvedListController.GetSolvedList().Contains(this.gameObject) && gameObject.transform.GetChild(0).gameObject.activeSelf)
+                print($"{gameObject.name} ready allocate");
+                //userClose = true;
+                //print("wall should ready " + gameObject.name);
+                states = null;
+                //if (waitAllocate)
                 {
-                    userClose = true;
-                    //print("wall should ready " + gameObject.name);
-                    Animator states = null;
-                    //if (waitAllocate)
-                    {
-                        //waitAllocate = false;
-                        states = Allocate_wall(gameObject);
-                    }
-                    if (states != null)
-                    {
-                        //states.SetBool("AllocateRW", true);
-                        //print("robot wall =" + states.name);
-                        matchRoboticWall = states;
-                        int counter = states.GetInteger("NearWallCounter") + 1;
-                        if (counter >= 10)
-                        {
-                            userClose = true;
-                            solvedListController.SetWallSolved(this.gameObject);
-                            states.GetBehaviour<Wall_State>().SetTargetWall(this.gameObject);
-                            counter = 10;
-                        }
-                        states.SetInteger("NearWallCounter", counter);
-                    }
-                    //print(gameObject.name + "need a RW");
+                    //waitAllocate = false;
+                    //states = Allocate_wall(gameObject);       
+                    WaitRandomFrameAndAllocate();
                 }
+                if (states != null)
+                {
+                    //states.SetBool("AllocateRW", true);
+                    //print("robot wall =" + states.name);
+                    matchRoboticWall = states;
+                    vWall.SetMatchRWall(states);
+                    /*int counter = states.GetInteger("NearWallCounter") + 1;
+                    if (counter >= 10)
+                    {
+                        userClose = true;
+                        states.GetBehaviour<Wall_State>().SetTargetWall(this.gameObject);
+                        counter = 10;
+                    }
+                    states.SetInteger("NearWallCounter", counter);*/
+                }
+                //print(gameObject.name + "need a RW");
             }
+
 
 
         }
     }
+
+    private void WaitRandomFrameAndAllocate()
+    {
+        waitCount++;
+        int rand = Random.Range(0, 100);
+        if (rand != 0 &&waitCount >= rand)
+        {
+            states = Allocate_wall(gameObject);
+        }
+    }
+
+
 
     private void OnTriggerExit(Collider other)
     {
         if (other.tag.CompareTo("User_Detect_Area") == 0)
         {
+            vWall.SetMatchRWall(null);
             //matchRoboticWall.SetBool("AllocateRW", false);
-            solvedListController.ReleaseWall(this.gameObject);
-            userClose = false;
+            /*userClose = false;
             if(matchRoboticWall != null)
                 matchRoboticWall.GetBehaviour<Wall_State>().SetReadyRelease(true);
             //matchRoboticWall = null;
             waitAllocate = true;
-            waitCount = 0;
+            waitCount = 0;*/
         }
     }
 
     public Animator Allocate_wall(GameObject targetWall)
     {
+        print($"{gameObject.name} allocate");
+
         string distanceList = "distance =";
         Animator result = null;
         GameObject slider = gameObject.transform.GetChild(0).gameObject;
@@ -160,7 +188,7 @@ public class RoboticWall_Requester : MonoBehaviour
         //print(distanceList);
         foreach (Animator ani in statesList)
         {
-            if (ani.GetCurrentAnimatorStateInfo(0).IsName("Standby"))
+            if (ani.GetCurrentAnimatorStateInfo(0).IsName("Standby") && ani.GetInteger("NearWallCounter") < 10)
             {
                 //...do transform from stand_by to wall condition
                 /* int counter = states.GetInteger("NearWallCounter") + 2;
@@ -187,7 +215,6 @@ public class RoboticWall_Requester : MonoBehaviour
             }
         }*/
 
-        waitCount++;
         if (result == null)
             Debug.Log("no robotic wall is in standby state");
         return result;
@@ -205,16 +232,5 @@ public class RoboticWall_Requester : MonoBehaviour
         return vec.magnitude;
     }
 
-    IEnumerator Wait2Frame()
-    {
-        yield return 2;
-        /*foreach (Animator states in statesList)
-        {
-            if (states.GetCurrentAnimatorStateInfo(0).IsName("Standby"))
-            {
-                    
-                matchRoboticWall = states;
-            }
-        }*/
-    }
+   
 }

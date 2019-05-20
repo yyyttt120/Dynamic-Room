@@ -1,0 +1,2 @@
+touch count = 0; encounterd touch count = 0
+

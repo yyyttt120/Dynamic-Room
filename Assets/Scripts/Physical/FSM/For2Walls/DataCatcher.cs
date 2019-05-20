@@ -23,6 +23,7 @@ public class DataCatcher : MonoBehaviour
     int target = 0;
 
     StringBuilder data_input;//build the data set for python
+    List<string> infoList;//store the information for every sample
 
     int count;//when it's 20, a input data set is ready
     void Start()
@@ -35,7 +36,7 @@ public class DataCatcher : MonoBehaviour
             virtualWalls.Add(temp[i].GetComponent<VirtualWall>());*/
         foreach (Robotic_Wall wall_r in rWalls)
             wall_r.Set_Robotic_Wall(wall_r.gameObject);
-
+        infoList = new List<string>();
         //*****************************collect data for training**************************
        /* //第一步访问Txt文件
         string path = Application.dataPath + "/Data/1.txt";
@@ -76,8 +77,15 @@ public class DataCatcher : MonoBehaviour
         {
             //WriteData(output);
             timer = 0;
-            count++;
-            data_input.Append(input);
+            if (infoList.Count < 20)
+                infoList.Add(input);
+            else
+            {
+                infoList.RemoveAt(0);
+                infoList.Add(input);
+            }
+            //count++;
+            //data_input.Append(input);
         }
 
         //*****************************collect data for training**************************
@@ -88,9 +96,11 @@ public class DataCatcher : MonoBehaviour
             WriteData("");
         }*/
         string inputStr = null;
-        if (count >= 20)
+        if (infoList.Count == 20)
         {
-            count = 0;
+            //count = 0;
+            foreach (string sample in infoList)
+                data_input.Append(input);
             inputStr = data_input.ToString();
             inputStr = inputStr.Remove(inputStr.Length - 1, 1);
             //string result = py.UsePython(inputStr);

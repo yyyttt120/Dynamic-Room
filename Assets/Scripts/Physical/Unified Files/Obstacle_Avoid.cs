@@ -115,7 +115,7 @@ public class Obstacle_Avoid : MonoBehaviour
                 }
                 /*else
                     avoidanceVector = Vector3.zero;*/
-                double maxAvoidanceVector = 1 / hit.distance * 10;
+                double maxAvoidanceVector = 1 / hit.distance * 20;
                 if (avoidanceVector.magnitude > maxAvoidanceVector)
                     avoidanceVector = avoidanceVector.normalized * (float)maxAvoidanceVector;
 

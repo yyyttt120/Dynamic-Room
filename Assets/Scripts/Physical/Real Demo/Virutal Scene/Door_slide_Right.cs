@@ -51,7 +51,7 @@ public class Door_slide_Right : MonoBehaviour {
             RoombaMotionController.Translation_LR(target_wall, wall, 0, true, 0, 800);
         }*/
         //print("over =" + over);
-        print("over =" + over);
+        //print("over =" + over);
         if (over)
         {
             //if (ViveInput.GetPress(HandRole.LeftHand, ControllerButton.Trigger))
@@ -62,7 +62,7 @@ public class Door_slide_Right : MonoBehaviour {
                 if (closedposition.x - transform.position.x <= 0.01f && closedposition.x - transform.position.x >= -length + 0.01)
                 {
                     transform.position = target;
-                    print("open door");
+                    //print("open door");
                 }
                 //set the left boundry of the slide door
                 if (closedposition.x - transform.position.x < -length + 0.01)
