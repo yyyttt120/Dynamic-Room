@@ -12,29 +12,35 @@ public class Robotic_Wall: MonoBehaviour
     public RoombaFeedback_Velocity roomba_controller_vel;
     public Animator stateController;
 
+    private void Start()
+    {
+        Set_Robotic_Wall(this.gameObject);
+    }
+
     public bool Set_Robotic_Wall(GameObject r_wall)
     {
+        bool allSet = true;
         this.robotic_wall = r_wall;
         if (r_wall.GetComponent<Wall_To_Target>() != null)
             this.wallToTarget_controller = r_wall.GetComponent<Wall_To_Target>();
         else
-            return false;
+            allSet = false;
 
         if (r_wall.GetComponent<Animator>() != null)
             this.roomba_controller_vel = r_wall.GetComponent<RoombaFeedback_Velocity>();
         else
-            return false;
+            allSet = false;
 
         if (r_wall.GetComponent<RoombaFeedback_Test>() != null)
             this.roomba_controller = r_wall.GetComponent<RoombaFeedback_Test>();
         else
-            return false;
+            allSet = false;
 
         if (r_wall.GetComponent<RoombaFeedback_Velocity>() != null)
             this.roomba_controller_vel = r_wall.GetComponent<RoombaFeedback_Velocity>();
         else
-            return false;
+            allSet = false;
 
-        return true;
+        return allSet;
     }
 }

@@ -8,8 +8,11 @@ public class Allocator : MonoBehaviour
     public Robotic_Wall[] rWalls;
     public VirtualWall[] vWalls;
     public ServerObject dataRequester;
-    private GameObject user;
+    public Detect_Area_forML detectBlock;
+    private GameObject standbyPoints;
+    GameObject user;
 
+    private List<GameObject> standbyList;
     private int lastVirWallNum;
     private int lastFrameTarget;
     private int rWallNum;//the robotic wall which is going to match the target in this frame
@@ -20,6 +23,12 @@ public class Allocator : MonoBehaviour
         lastFrameTarget = 0;
         rWallNum = 0;
         lastVirWallNum = 0;
+        standbyPoints = GameObject.Find("Stand_by");
+        standbyList = new List<GameObject>();
+        for(int i = 0; i < 4; i++)
+        {
+            standbyList.Add(standbyPoints.transform.GetChild(i).gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -28,7 +37,7 @@ public class Allocator : MonoBehaviour
         int targetNum = Int32.Parse(dataRequester.result);
         print("target number ="+ targetNum);
         rWalls[0].wallToTarget_controller.Robot_Move_Switch(true);
-
+       
         //change the robotic wall, once the target was changed
         if (targetNum != 0  && targetNum != lastFrameTarget)
         {
@@ -46,11 +55,16 @@ public class Allocator : MonoBehaviour
             //allocate a robotic wall for target virtual wall
             int targetRWall = AllocateRWall(vWalls[targetNum - 1].gameObject);
             vWalls[targetNum - 1].SetMatchRWall(rWalls[targetRWall].stateController);
-
+            //rWalls[targetRWall].stateController.GetBehaviour<Wall_State>().SetTargetWall(vWalls[targetNum - 1].gameObject);
             //set virtual target for another robotic wall
-            int otherTarget = FindCorner(targetNum);
-            print($"other target = {otherTarget}");
-            vWalls[otherTarget - 1].SetMatchRWall(rWalls[targetRWall == 0 ? 1 : 0].stateController);
+            //int otherTarget = FindCorner(targetNum);
+            //print($"other target = {otherTarget}");
+            GameObject otherTarget = FindOtherTarget(targetNum);
+            if (otherTarget != null)
+                //rWalls[targetRWall == 0 ? 1 : 0].stateController.GetBehaviour<Wall_State>().SetTargetWall(otherTarget);     
+                otherTarget.GetComponent<VirtualWall>().SetMatchRWall(rWalls[targetRWall == 0 ? 1 : 0].stateController);
+            else
+                rWalls[targetRWall == 0 ? 1 : 0].stateController.GetBehaviour<Wall_State>().SetTargetWall(FindStandbyPoint(rWalls[targetRWall == 0 ? 1 : 0]));
             /*if (vWalls[targetNum - 1].gameObject != vWalls[lastVirWallNum - 1].gameObject)
             {
                 //if last target is not close to current target, set a close wall as the target of another robotic wall,else set the last target as the target of antoher robotic wall
@@ -63,7 +77,39 @@ public class Allocator : MonoBehaviour
         /*if(targetNum != 0)
             lastVirWallNum = targetNum;*/
     }
+    private GameObject FindStandbyPoint(Robotic_Wall rwall)
+    {
+        standbyList.Sort(delegate (GameObject point1, GameObject point2) {
+            Vector3 vec1 = point1.transform.position - rwall.transform.position;
+            Vector3 vec2 = point2.transform.position - rwall.transform.position;
+            vec1.y = 0;
+            vec2.y = 0;
+            if (vec1.magnitude > vec2.magnitude)
+                return 1;
+            else
+                return -1;
+        });
+        print($"stand by point = {standbyList[0]}");
+        return standbyList[0];
+    }
 
+    //besides the ML target, find a target for another robotic wall based on deteting block
+    private GameObject FindOtherTarget(int MLtarget)
+    {
+        List<GameObject> WallsInArea = detectBlock.GetWallInAreaList();
+        print($"amount of detected walls = {WallsInArea.Count}");
+        foreach(GameObject wall in WallsInArea)
+        {
+            if (wall != vWalls[MLtarget - 1].gameObject)
+            {
+                print($"other target = {wall.name}");
+                return wall;
+            }
+        }
+        return null;
+    }
+
+    //find a virtual wall which could compose a corner with target virtual wall, return the ID of this virtual wall
     private int FindCorner(int target)
     {
         if (target < 3)

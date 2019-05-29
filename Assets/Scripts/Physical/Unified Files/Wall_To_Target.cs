@@ -24,6 +24,7 @@ public class Wall_To_Target : MonoBehaviour {
     private bool start_rotate = false;//enable the rotation
     private bool in_turn = false;//in the area for turning
     private bool record_in_turn;
+    private float time;
 
     private Animator anim;
     private GameObject target;
@@ -35,10 +36,12 @@ public class Wall_To_Target : MonoBehaviour {
         record_in_turn = in_turn;
         //avoidance = this.GetComponent<Obstacle_Avoid>();
         anim = gameObject.GetComponent<Animator>();
+        time = 0;
     }
 
     // Update is called once per frame
     void Update() {
+        time += Time.deltaTime;
         anim = gameObject.GetComponent<Animator>();
         print(gameObject.name + "target =" + target.name + target.transform.parent.name);
         if (target == null)
@@ -55,16 +58,6 @@ public class Wall_To_Target : MonoBehaviour {
             //print("start = " + start);
             bool state = !start_translate && !start_rotate;
             //print("state =" + state);
-            //when the wall enter in_tuen area, set the in_turn true to prepare rotating 
-            //in_turn = In_turn.GetIn_turn();
-            bool trigger = EdgeTrigger(in_turn);
-            if (in_turn && trigger)
-            {
-                //if (In_turn.GetWall() == target.transform.GetChild(0).gameObject)
-                start_rotate = true;
-                //print("trigger up");
-            }
-
             //when the target position changed
             float distance = (last_target_pos - target.transform.position).magnitude;//distance between last target and current target
             last_target_pos = target.transform.position;
@@ -95,48 +88,76 @@ public class Wall_To_Target : MonoBehaviour {
             }
             Color color = Color.blue;
             Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
-            if (switch_button)
+            if (time >= 0.02)
             {
-                //print("PID On");
-                if (start)
+                time = 0;
+                if (switch_button)
                 {
-                    //print(this.name + "target =" + target.name);
-                    if (start_translate)
+                    //print("PID On");
+                    if (start)
                     {
-                        //print("translating");
-                        //print(gameObject.name + " translating");
-                        /*if(in_turn)
-                            controll.SetErrDistance(0.1f);
-                        else
-                            controll.SetErrDistance(0.3f);*/
-                        //print("translate1:" + start_translate);
-                        //print("wallnum:" + wallnum);
-                        /*if(target = standBy)
-                            start_translate = !controll.Translation(target.transform.position, wall, wallnum, true, p1, p2);
-                        else*/
-                        avoidTarget = target.transform.position + avoidance.GetAviodanceVector();
-                        //Debug.DrawRay(avoidTarget, Vector3.forward * 1f, color,0.1f,true);
-                        //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
-                        if (robotic_wall_dir == Wall_Mov_Dir.Left_Right)
-                            start_translate = !controll.Translation_LR(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
-                        else
-                            start_translate = !controll.Translation_FB(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
-                        //print("translate2:" + start_translate);
+                        //print(this.name + "target =" + target.name);
+                        if (start_translate)
+                        {
+                            avoidTarget = target.transform.position + avoidance.GetAviodanceVector();
+                            //Debug.DrawRay(avoidTarget, Vector3.forward * 1f, color,0.1f,true);
+                            //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
+                            if (robotic_wall_dir == Wall_Mov_Dir.Left_Right)
+                                start_translate = !controll.Translation_LR(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                            else
+                                start_translate = !controll.Translation_FB(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                            //print("translate2:" + start_translate);
+                        }
                     }
-                }
-                //**********************************************
-                if (!start_translate /*&& start_rotate*/)
-                {
-                    //print("rotating");
-                    double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
-                    if (angle > -90 && angle < 90)
-                        start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
-                    else
-                        start_rotate = !controll.Rotation(-target.transform.forward, wall, wallnum, p, d_rotate, true);
-                }
+                    //**********************************************
+                    print($"start translate = {start_translate}");
+                    if (!start_translate)
+                    {
+                        //print("rotating");
+                        double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
+                        if (angle > -90 && angle < 90)
+                            start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
+                        else
+                            start_rotate = !controll.Rotation(-target.transform.forward, wall, wallnum, p, d_rotate, true);
+                    }
 
+                }
             }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        /*if (switch_button)
+        {
+            //print("PID On");
+            if (start)
+            {
+                //print(this.name + "target =" + target.name);
+                if (start_translate)
+                {
+                    avoidTarget = target.transform.position + avoidance.GetAviodanceVector();
+                    //Debug.DrawRay(avoidTarget, Vector3.forward * 1f, color,0.1f,true);
+                    //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
+                    if (robotic_wall_dir == Wall_Mov_Dir.Left_Right)
+                        start_translate = !controll.Translation_LR(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                    else
+                        start_translate = !controll.Translation_FB(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                    //print("translate2:" + start_translate);
+                }
+            }
+            //**********************************************
+            /*if (!start_translate)
+            {
+                print("rotating");
+                double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
+                if (angle > -90 && angle < 90)
+                    start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
+                else
+                    start_rotate = !controll.Rotation(-target.transform.forward, wall, wallnum, p, d_rotate, true);
+            }
+
+        }*/
     }
 
     public double AngleSigned(Vector3 v1, Vector3 v2, Vector3 n)//return the angle between two vectors

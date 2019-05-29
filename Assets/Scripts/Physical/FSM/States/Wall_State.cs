@@ -5,7 +5,7 @@ using UnityEngine;
 public class Wall_State : StateMachineBehaviour {
     private FSMSystem fsmController;
     private GameObject targetWall;
-    private Robotic_Wall roboticWall = new Robotic_Wall();
+    private Robotic_Wall roboticWall;
     private GameObject slider;
     private GameObject user;
     private Wall_Requester wall_requester;
@@ -17,7 +17,7 @@ public class Wall_State : StateMachineBehaviour {
         //if it's from door state, keep the target wall same, else get target wall by controller
         //if (!animator.GetBool("SliderEnterDoor"))
         //targetWall = fsmController.SendToWallState();
-        roboticWall.Set_Robotic_Wall(animator.gameObject);
+        roboticWall = animator.gameObject.GetComponent<Robotic_Wall>();
         slider = targetWall.transform.GetChild(0).gameObject;
         user = GameObject.Find("Camera (eye)").gameObject;
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
@@ -33,7 +33,15 @@ public class Wall_State : StateMachineBehaviour {
         else
             slider.transform.position = new Vector3(targetWall.transform.position.x, targetWall.transform.position.y, user.transform.position.z);*/
         //************************
-        slider = targetWall.transform.GetChild(0).gameObject;
+        try
+        {
+            slider = targetWall.transform.GetChild(0).gameObject;
+        }
+        catch(UnityException err)
+        {
+            slider = targetWall;
+            Debug.Log(animator.name + err);
+        }
         roboticWall.wallToTarget_controller.Set_Target(slider);
         roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
         //Debug.Log("wall_state");
@@ -43,17 +51,17 @@ public class Wall_State : StateMachineBehaviour {
             //***********************
             {
                 int counter = animator.GetInteger("NearWallCounter") - 2;
-                if (counter < -31)
+                if (counter < -51)
                 {
-                    counter = -31;
+                    counter = -51;
 
-                    if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
+                    /*if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
                         wall_requester.ReleaseWall(targetWall);
                     else
                     {
                         Debug.Log("dont release" + targetWall.name);
                         wall_requester.SetWallSolved(targetWall);
-                    }
+                    }*/
                 }
                 animator.SetInteger("NearWallCounter", counter);
             }

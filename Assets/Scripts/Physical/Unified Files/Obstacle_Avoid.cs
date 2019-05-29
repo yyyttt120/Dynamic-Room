@@ -9,10 +9,11 @@ public class Obstacle_Avoid : MonoBehaviour
     private SteamVR_Controller.Device device;
     private GameObject target;
     private Robotic_Wall rWall;
-    private int layMask = (1 << 9) | (1 << 10);
+    private int layMask = (1 << 9) | (1 << 10);//player and robotic wall layers
     private RaycastHit hit;
     private Vector3 wallPredict;//the moving direction of the robotic wall
     private Vector3 avoidanceVector;
+    private float avoidThreshold = 0.20f;//when the robotic wall is closer to target than this value, disable avoidance module
     public float detectRange;//the range of predicted area
     public float force;//the force to avoid obstacle
     public float nonAvoidRange;//range of area where no need to avoid
@@ -23,8 +24,8 @@ public class Obstacle_Avoid : MonoBehaviour
                                // Use this for initialization
     void Start()
     {
-        rWall = new Robotic_Wall();
-        rWall.Set_Robotic_Wall(this.gameObject);
+        //rWall = new Robotic_Wall();
+        rWall = this.gameObject.GetComponent<Robotic_Wall>();
         //tracker = transform.parent.gameObject.GetComponent<SteamVR_TrackedObject>();
         //device = SteamVR_Controller.Input((int)tracker.index);
         wallPredict = Vector3.zero;
@@ -72,7 +73,7 @@ public class Obstacle_Avoid : MonoBehaviour
         else
             moveDirection = -gameObject.transform.right;
 
-
+        closeToTarget = DisableThisModule();
         if (/*wallPredict.magnitude > nonAvoidRange*/!closeToTarget)
         //if (wallPredict.magnitude > nonAvoidRange)
         {
@@ -115,7 +116,7 @@ public class Obstacle_Avoid : MonoBehaviour
                 }
                 /*else
                     avoidanceVector = Vector3.zero;*/
-                double maxAvoidanceVector = 1 / hit.distance * 20;
+                double maxAvoidanceVector = 1 / hit.distance * 50;
                 if (avoidanceVector.magnitude > maxAvoidanceVector)
                     avoidanceVector = avoidanceVector.normalized * (float)maxAvoidanceVector;
 
@@ -165,6 +166,29 @@ public class Obstacle_Avoid : MonoBehaviour
             }
     }*/
 
+    private bool DisableThisModule()
+    {
+        bool close = false;
+
+        if (target != null)
+        {
+            Vector3 rtov = target.transform.position - this.transform.position;
+            rtov.y = 0;
+            Vector3 raydir;
+            if (Vector3.Dot(rtov, target.transform.forward) > 0)
+                raydir = target.transform.forward;
+            else
+                raydir = -target.transform.forward;
+            if (Physics.Raycast(this.transform.position, raydir, out hit, avoidThreshold, (1 << 8)))
+            {
+                if(hit.collider.gameObject == target.transform.parent.gameObject)
+                {
+                    close = true;
+                }
+            }
+        }
+        return close;
+    }
 
     private Vector3 GetMovingDir()
     {

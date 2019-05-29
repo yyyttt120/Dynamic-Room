@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 1304166474967753904}
   - component: {fileID: 1304166474967753905}
   m_Layer: 0
-  m_Name: Roomba
+  m_Name: Roomba_Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

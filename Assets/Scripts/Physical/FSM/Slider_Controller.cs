@@ -40,7 +40,7 @@ public class Slider_Controller : MonoBehaviour {
         if (thisController == ControllerType.real)
             range = 10f;
         else
-            range = 2f;
+            range = 10f;
         if (Physics.Raycast(user.transform.position, raydir, out hit, range, layer))
         {
             //print("hit point =" + hit.collider.gameObject.name);

@@ -12,6 +12,8 @@ public class RoboticWall_Requester : MonoBehaviour
     private Animator states = null;
     private VirtualWall vWall;
 
+    private float timer;
+
     private int waitCount = 0;
 
     private bool waitAllocate = true;
@@ -23,6 +25,7 @@ public class RoboticWall_Requester : MonoBehaviour
         vWall = gameObject.GetComponent<VirtualWall>();
         statesController = GameObject.Find("StatesController").GetComponent<FSMSystem>();
         statesList = new List<Animator>();
+        timer = 0;
     }
 
     // Update is called once per frame
@@ -85,6 +88,7 @@ public class RoboticWall_Requester : MonoBehaviour
             if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null)
             {
                 waitCount = 0;
+                timer = 0;
             }
         }
     }
@@ -93,7 +97,7 @@ public class RoboticWall_Requester : MonoBehaviour
     {
         if (other.tag.CompareTo("User_Detect_Area") == 0)
         {
-            print($"{gameObject.name} detect");
+            //print($"{gameObject.name} detect");
             //print("wall in:" + gameObject.name);
             //make sure the encountered wall woulden't be released
             //if (releasedWall == other.gameObject)
@@ -104,31 +108,35 @@ public class RoboticWall_Requester : MonoBehaviour
 
             if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null)
             {
-                print($"{gameObject.name} ready allocate");
+                //print($"{gameObject.name} ready allocate");
                 //userClose = true;
                 //print("wall should ready " + gameObject.name);
+                timer += Time.deltaTime;
                 states = null;
                 //if (waitAllocate)
+                if(timer > 1f)
                 {
                     //waitAllocate = false;
-                    //states = Allocate_wall(gameObject);       
-                    WaitRandomFrameAndAllocate();
-                }
-                if (states != null)
-                {
-                    //states.SetBool("AllocateRW", true);
-                    //print("robot wall =" + states.name);
-                    matchRoboticWall = states;
-                    vWall.SetMatchRWall(states);
-                    /*int counter = states.GetInteger("NearWallCounter") + 1;
-                    if (counter >= 10)
+                    states = Allocate_wall(gameObject);
+                    timer = 0;
+                    //WaitRandomFrameAndAllocate();
+                    if (states != null)
                     {
-                        userClose = true;
-                        states.GetBehaviour<Wall_State>().SetTargetWall(this.gameObject);
-                        counter = 10;
+                        //states.SetBool("AllocateRW", true);
+                        //print("robot wall =" + states.name);
+                        matchRoboticWall = states;
+                        vWall.SetMatchRWall(states);
+                        /*int counter = states.GetInteger("NearWallCounter") + 1;
+                        if (counter >= 10)
+                        {
+                            userClose = true;
+                            states.GetBehaviour<Wall_State>().SetTargetWall(this.gameObject);
+                            counter = 10;
+                        }
+                        states.SetInteger("NearWallCounter", counter);*/
                     }
-                    states.SetInteger("NearWallCounter", counter);*/
                 }
+                
                 //print(gameObject.name + "need a RW");
             }
 
@@ -154,6 +162,7 @@ public class RoboticWall_Requester : MonoBehaviour
         if (other.tag.CompareTo("User_Detect_Area") == 0)
         {
             vWall.SetMatchRWall(null);
+            timer = 0;
             //matchRoboticWall.SetBool("AllocateRW", false);
             /*userClose = false;
             if(matchRoboticWall != null)
@@ -166,7 +175,7 @@ public class RoboticWall_Requester : MonoBehaviour
 
     public Animator Allocate_wall(GameObject targetWall)
     {
-        print($"{gameObject.name} allocate");
+        //print($"{gameObject.name} allocate");
 
         string distanceList = "distance =";
         Animator result = null;

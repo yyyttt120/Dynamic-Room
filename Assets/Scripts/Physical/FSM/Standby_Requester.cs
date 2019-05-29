@@ -10,6 +10,9 @@ public class Standby_Requester : MonoBehaviour {
     private List<GameObject> slovedWallList;
     private List<GameObject> standby_list;
     private List<GameObject> standby_list_available;
+
+    private GameObject center;//the center of the virtual room
+    private FSMSystem statesController;
 	// Use this for initialization
 	void Start () {
         slovedWallList = new List<GameObject>();
@@ -26,6 +29,8 @@ public class Standby_Requester : MonoBehaviour {
             standby_list_available.Add(transform.GetChild(i).gameObject);
         }
         //print(standby_list_available[0].name);
+        //statesController = GameObject.Find("StatesController").GetComponent<FSMSystem>();
+        center = GameObject.Find("Center");
     }
 	
 	// Update is called once per frame
@@ -48,6 +53,7 @@ public class Standby_Requester : MonoBehaviour {
             //print(stand.name + "distance =" + dis);
         }
         slovedWallList = wall_requester.GetSolvedList();
+        //sort with the distance from this robotic wall to standby points, the closet standby point shall be picked
         standby_list_available.Sort(delegate (GameObject phyW1, GameObject phyW2)
         {
             if (DistanceToVirWall(roboticWall, phyW1) < DistanceToVirWall(roboticWall, phyW2))
@@ -55,6 +61,15 @@ public class Standby_Requester : MonoBehaviour {
             else
                 return 1;
         });
+
+        //sort with the total distance from other robotic wall in wall state to standby points, the standby point with largest total distance shall be picked
+        /*standby_list_available.Sort(delegate (GameObject stand1, GameObject stand2)
+        {
+            if (TotalDisToRWall(stand1,roboticWall) < TotalDisToRWall(stand2,roboticWall))
+                return 1;
+            else
+                return -1;
+        });*/
         /*List<GameObject> tempo_standby_list = standby_list_available;
         foreach(GameObject wall in slovedWallList)
         {
@@ -68,7 +83,19 @@ public class Standby_Requester : MonoBehaviour {
                 }
             }
         }*/
-        GameObject target = standby_list_available[0];
+        GameObject target;
+        if (standby_list_available.Count < 2)
+            target = standby_list_available[0];
+        else
+        {
+            if (DistanceToVirWall(standby_list_available[0], center) < DistanceToVirWall(standby_list_available[1], center))
+                target = standby_list_available[0];
+            else
+            {
+                print("better stand-by point");
+                target = standby_list_available[1];
+            }
+        }
         //print("allocate_standbypoint");
         standby_list_available.Remove(target);
         return target;
@@ -82,6 +109,22 @@ public class Standby_Requester : MonoBehaviour {
             Debug.Log("err: target standby point didn't be delete correctly:" + standbyPoint.name);
         else
             standby_list_available.Add(standbyPoint);
+    }
+
+    //return
+    private float TotalDisToRWall(GameObject standbyPoint,GameObject rWall)
+    {
+        float totalDis = 0;
+        foreach (Animator states in statesController.GetStatesList())
+        {
+            if (states.GetCurrentAnimatorStateInfo(0).IsName("Wall") || states.gameObject == rWall)
+            {
+                Vector3 vec = states.transform.position - standbyPoint.transform.position;
+                vec.y = 0;
+                totalDis += vec.magnitude;
+            }
+        }
+        return totalDis;
     }
 
     private float DistanceToVirWall(GameObject virWall, GameObject phyWall)

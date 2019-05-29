@@ -243,14 +243,14 @@ public class RoombaFeedback_Test : MonoBehaviour {
         //amplitude limiting
         velocity_R = ampLimit(velocity_R);
         velocity_L = ampLimit(velocity_L);
-        if (angle >= -0.5 && angle <= 0.5)
+        if (angle >= -2 && angle <= 2)
         {
             finished = true;
             c2.Stop(wallnum);
         }
          else
         {
-            if (recodeflag)
+            //if (recodeflag)
             {
                 c2.Move(velocity_R, velocity_L, wallnum);
                 finished = false;
@@ -320,21 +320,22 @@ public class RoombaFeedback_Test : MonoBehaviour {
         distance_sum = distance_sum + distance * movingdirection;
         //bang bang controll
         //if (distance <= 0.2f)
-        //{
+        {
             distance_input = p_dis * distance * movingdirection + d2 * distance_error + i_translate2 * distance_sum;
+            //*******************prepare for second loop of PID********************
+            spd_ref = distance_input;
+            //print("spd_ref =" + spd_ref);
+            angleSpd_ref = angle_input;
+            distance_input = Translate_vel_dis(p_2loop, d_2loop, movingdirection);
+            //print($"distacne input = {distance_input}");
+            //*******************************************
             angle_input = p_ang * angle;
-        //}
+        }
         /*else
         {
             distance_input = 1000 * movingdirection;
+            angle_input = p_ang * angle;
         }*/
-
-        //*******************prepare for second loop of PID********************
-        spd_ref = distance_input;
-        //print("spd_ref =" + spd_ref);
-        angleSpd_ref = angle_input;
-        distance_input = Translate_vel_dis(p_2loop, d_2loop);
-        //*******************************************
 
         distance_input = ampLimit((int)distance_input);
         angle_input = ampLimit((int)angle_input);
@@ -352,7 +353,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         }
         else
         {
-            if (recodeflag)
+            //if (recodeflag)
             {
                 //print("velocity R =" + velocity_R);
                 //print("velocity L =" + velocity_L);
@@ -363,12 +364,13 @@ public class RoombaFeedback_Test : MonoBehaviour {
         }
 
         // put the data need to be shown in oscillscope into data1[]
-        if (/*distance * movingdirection*1000*/originAngle*10 < 0)
+        
+        /*if (originAngle*10 < 0)
         {
-            data1[0] = Convert.ToUInt16((Convert.ToUInt16(Math.Abs(originAngle*10/*distance * movingdirection*1000*/)) ^ 0xffff) + 1);
+            data1[0] = Convert.ToUInt16((Convert.ToUInt16(Math.Abs(originAngle*10)) ^ 0xffff) + 1);
         }
         else
-        { data1[0] = Convert.ToUInt16(/*distance * movingdirection*1000*/originAngle*10); }
+        { data1[0] = Convert.ToUInt16(originAngle*10); }
         //print(distance);
         if (angle*10 < 0)
         {
@@ -391,7 +393,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         else { data1[3] = Convert.ToUInt16(velocity_L); }
         //Debug.Log(velocity_R);
 
-        data3 = OutPut_Data(data1, data2);
+        data3 = OutPut_Data(data1, data2);*/
         /*if(recodeflag)
             serial_write(data2);*/
         print(gameObject.name + " translating");
@@ -541,11 +543,13 @@ public class RoombaFeedback_Test : MonoBehaviour {
     }
 
     // 2nd LOOP of PID output of distance
-    public double Translate_vel_dis(double p_dis, double d_dis)
+    public double Translate_vel_dis(double p_dis, double d_dis,int moveDirection)
     {
         SteamVR_TrackedObject tracker = gameObject.transform.parent.GetComponent<SteamVR_TrackedObject>();
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)tracker.index);
-        double spd_err = spd_ref - device.velocity.magnitude*1000;
+        //($"ref speed = {spd_ref}");
+        //print($"velocity = {device.velocity}");
+        double spd_err = spd_ref - Mathf.Abs(device.velocity.x)*moveDirection;
         double spd_d = device.velocity.magnitude*1000 - speed_lastframe;
         speed_lastframe = device.velocity.magnitude*1000;
         //print("speed_d =" + spd_d);

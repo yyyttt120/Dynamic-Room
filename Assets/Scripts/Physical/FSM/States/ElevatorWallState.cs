@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ElevatorWallState : ElevatorState {
-    private Robotic_Wall robotic_wall = new Robotic_Wall();
+    private Robotic_Wall robotic_wall;
     private GameObject eleva;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        robotic_wall.Set_Robotic_Wall(animator.gameObject);
+        robotic_wall = animator.gameObject.GetComponent<Robotic_Wall>();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

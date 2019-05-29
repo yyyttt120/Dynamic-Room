@@ -96,7 +96,7 @@ public class VirtualWall : MonoBehaviour
             Vector3 dis = matchRWall.transform.position - transform.GetChild(0).position;
             dis.y = 0;
             double angle = AngleSigned(matchRWall.transform.forward, this.transform.forward, Vector3.up);
-            if (dis.magnitude < 0.2f && ((angle < 5 && angle > -5)|| (angle >175 || angle < -175)) )
+            if (dis.magnitude < 0.15f && ((angle < 10 && angle > -10)|| (angle >170 || angle < -170)) )
             {
                 print("timer stop");
                 if(timerStart)

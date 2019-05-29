@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ElevatorDoorState : ElevatorState {
 
-    private Robotic_Wall robotic_wall = new Robotic_Wall();
+    private Robotic_Wall robotic_wall;
     private FSMSystem statesController;
     private List<Animator> statesList;
     private GameObject eleva;
@@ -15,7 +15,7 @@ public class ElevatorDoorState : ElevatorState {
     GameObject ele_wall;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        robotic_wall.Set_Robotic_Wall(animator.gameObject);
+        robotic_wall = animator.gameObject.GetComponent<Robotic_Wall>();
         statesController = GameObject.Find("StatesController").GetComponent<FSMSystem>();
         statesList = statesController.GetStatesList();
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();

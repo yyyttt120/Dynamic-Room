@@ -26,8 +26,8 @@ public class FSMSystem : MonoBehaviour {
             statesList.Add(r_wall2.GetComponent<Animator>());
         if (r_wall3.activeSelf)
             statesList.Add(r_wall3.GetComponent<Animator>());
-        /*if (r_wall4.activeSelf)
-            statesList.Add(r_wall4.GetComponent<Animator>());*/
+        if (r_wall4.activeSelf)
+            statesList.Add(r_wall4.GetComponent<Animator>());
     }
 
     // Update is called once per frame

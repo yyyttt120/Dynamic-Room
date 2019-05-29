@@ -6,12 +6,12 @@ public class DoorFrameState : StateMachineBehaviour {
     private GameObject frame;
     //private GameObject slider;
     //private GameObject user;
-    private Robotic_Wall roboticWall = new Robotic_Wall();
+    private Robotic_Wall roboticWall;
     private Wall_Requester wall_requester;
     private GameObject doorWall;//the door where the wall settle
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        roboticWall.Set_Robotic_Wall(animator.gameObject);
+        roboticWall=animator.gameObject.GetComponent<Robotic_Wall>();
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
         //user = GameObject.Find("Camera (eye)").gameObject;
         //roboticWall.wallToTarget_controller.Robot_Move_Switch(true);

@@ -31,7 +31,7 @@ public class Wall_Requester : MonoBehaviour {
         {
             solvedList += wall_.name + " ";
         }
-        print(solvedList);
+        //print(solvedList);
 
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracker.index);
 
