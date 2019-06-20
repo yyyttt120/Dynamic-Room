@@ -29,14 +29,14 @@ public class Switch_Light : MonoBehaviour {
         {
             if (RenderSettings.fog)
             {
-                if(SceneManager.GetActiveScene().buildIndex != 0)
-                    RenderSettings.fog = false;
+                //if(SceneManager.GetActiveScene().buildIndex != 0)
+                //RenderSettings.fog = false;
                 mylight.SetActive(true);
             }
         }
         else
         {
-            if (!RenderSettings.fog)
+            //if (!RenderSettings.fog)
             {
                 RenderSettings.fog = true;
                 mylight.SetActive(false);

@@ -329,7 +329,11 @@ public class RoombaFeedback_Test : MonoBehaviour {
             distance_input = Translate_vel_dis(p_2loop, d_2loop, movingdirection);
             //print($"distacne input = {distance_input}");
             //*******************************************
-            angle_input = p_ang * angle;
+            if(distance > 0.2f)
+                angle_input = p_ang * angle;
+            else
+                //make the angle input attenuate with distance
+                angle_input = p_ang * angle * distance;
         }
         /*else
         {

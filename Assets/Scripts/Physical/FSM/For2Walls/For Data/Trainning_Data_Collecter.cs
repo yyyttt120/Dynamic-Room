@@ -28,7 +28,7 @@ public class Trainning_Data_Collecter : MonoBehaviour
     int count;//when it's 20, a input data set is ready
     void Start()
     {
-        GameObject[] temp;
+        //GameObject[] temp;
         data_input = new StringBuilder("");
         //virtualWalls = new List<VirtualWall>();
         //temp = GameObject.FindGameObjectsWithTag("Wall");

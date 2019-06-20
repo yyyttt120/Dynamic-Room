@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ElevatorButton : MonoBehaviour {
-    public Material red;
+    private Material red;
     public Material green;
     public string buttonName;
     public bool button = false;

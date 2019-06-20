@@ -43,7 +43,7 @@ public class Wall_To_Target : MonoBehaviour {
     void Update() {
         time += Time.deltaTime;
         anim = gameObject.GetComponent<Animator>();
-        print(gameObject.name + "target =" + target.name + target.transform.parent.name);
+        //print(gameObject.name + "target =" + target.name + target.transform.parent.name);
         if (target == null)
         {
             print(this.name + "no target");
@@ -87,13 +87,13 @@ public class Wall_To_Target : MonoBehaviour {
                 switch_button = !switch_button;
             }
             Color color = Color.blue;
-            Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
+            //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
             if (time >= 0.02)
             {
                 time = 0;
                 if (switch_button)
                 {
-                    //print("PID On");
+                    print("PID On");
                     if (start)
                     {
                         //print(this.name + "target =" + target.name);

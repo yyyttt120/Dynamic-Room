@@ -16,7 +16,7 @@ public class DataCatcher : MonoBehaviour
     public AudioSource notice;
     private float timer1 = 0;
     // Start is called before the first frame update
-    FileStream fs;
+    //FileStream fs;
     float time = 0;
     float timer = 0;
     string vwallInfo = "";
@@ -28,7 +28,7 @@ public class DataCatcher : MonoBehaviour
     int count;//when it's 20, a input data set is ready
     void Start()
     {
-        GameObject[] temp;
+        //GameObject[] temp;
         data_input = new StringBuilder("");
         //virtualWalls = new List<VirtualWall>();
         //temp = GameObject.FindGameObjectsWithTag("Wall");
@@ -63,11 +63,11 @@ public class DataCatcher : MonoBehaviour
         CleanList();*/
 
         timer1 += Time.deltaTime;
-        if (Input.GetKeyUp(KeyCode.LeftAlt))
+        /*if (Input.GetKeyUp(KeyCode.LeftAlt))
         {
             fs.Close();
             fs.Dispose();
-        }
+        }*/
         target = UpdateTarget();
         print("button =" + target);
         string output = time + " " + VectortoString(user.transform.position) + " " + VectortoString(user.transform.forward) + " " + VectortoString(device.velocity) + " "+VectortoString(device.angularVelocity) + " " + vwallInfo + target;

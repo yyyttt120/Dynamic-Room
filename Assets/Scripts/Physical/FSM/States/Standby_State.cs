@@ -6,13 +6,13 @@ public class Standby_State : StateMachineBehaviour {
 
     private Standby_Requester standby_requester;
     private GameObject standby_point;
-    private Robotic_Wall roboticWall = new Robotic_Wall();
+    private Robotic_Wall roboticWall;
     private int counter;
     private bool count;
 	 // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
 	override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         standby_requester = GameObject.Find("Stand_by").GetComponent<Standby_Requester>();
-        roboticWall.Set_Robotic_Wall(animator.gameObject);
+        roboticWall = animator.gameObject.GetComponent<Robotic_Wall>();
         standby_point = standby_requester.Allocate_StandbyPoint(roboticWall.robotic_wall);
         roboticWall.roomba_controller.SetErrDistance(0.15f);
         counter = 200;

@@ -21,7 +21,7 @@ public class Wall_State : StateMachineBehaviour {
         slider = targetWall.transform.GetChild(0).gameObject;
         user = GameObject.Find("Camera (eye)").gameObject;
         wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
-        wall_requester.SetWallSolved(targetWall);
+        //wall_requester.SetWallSolved(targetWall);
         readyToRelease = false;
         //Debug.Log("wall enter");
     }
@@ -86,13 +86,13 @@ public class Wall_State : StateMachineBehaviour {
         //if next state is door state, keep the target wall in sloved list, else release the target wall
         //Debug.Log("slider enter ele =" + animator.GetBool("SlideEnterElevator"));
         //Debug.Log("wall exit");
-        if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
-        wall_requester.ReleaseWall(targetWall);
-        else
+        //if (!animator.GetBool("SliderEnterDoor") && !animator.GetBool("SlideEnterElevator"))
+        //wall_requester.ReleaseWall(targetWall);
+        /*else
         {
             //Debug.Log("dont release" + targetWall.name);
             wall_requester.SetWallSolved(targetWall);
-        }
+        }*/
 
         //reset p1 and obstacle avoidance module
         /*roboticWall.wallToTarget_controller.SetP1(40);

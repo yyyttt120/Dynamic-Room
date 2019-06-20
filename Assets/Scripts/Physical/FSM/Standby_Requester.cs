@@ -12,7 +12,7 @@ public class Standby_Requester : MonoBehaviour {
     private List<GameObject> standby_list_available;
 
     private GameObject center;//the center of the virtual room
-    private FSMSystem statesController;
+    //private FSMSystem statesController;
 	// Use this for initialization
 	void Start () {
         slovedWallList = new List<GameObject>();
@@ -84,9 +84,9 @@ public class Standby_Requester : MonoBehaviour {
             }
         }*/
         GameObject target;
-        if (standby_list_available.Count < 2)
+        //if (standby_list_available.Count < 2)
             target = standby_list_available[0];
-        else
+        /*else
         {
             if (DistanceToVirWall(standby_list_available[0], center) < DistanceToVirWall(standby_list_available[1], center))
                 target = standby_list_available[0];
@@ -95,7 +95,7 @@ public class Standby_Requester : MonoBehaviour {
                 print("better stand-by point");
                 target = standby_list_available[1];
             }
-        }
+        }*/
         //print("allocate_standbypoint");
         standby_list_available.Remove(target);
         return target;
@@ -112,7 +112,7 @@ public class Standby_Requester : MonoBehaviour {
     }
 
     //return
-    private float TotalDisToRWall(GameObject standbyPoint,GameObject rWall)
+    /*private float TotalDisToRWall(GameObject standbyPoint,GameObject rWall)
     {
         float totalDis = 0;
         foreach (Animator states in statesController.GetStatesList())
@@ -125,7 +125,7 @@ public class Standby_Requester : MonoBehaviour {
             }
         }
         return totalDis;
-    }
+    }*/
 
     private float DistanceToVirWall(GameObject virWall, GameObject phyWall)
     {

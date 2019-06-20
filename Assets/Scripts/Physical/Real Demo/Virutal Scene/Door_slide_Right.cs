@@ -73,13 +73,13 @@ public class Door_slide_Right : MonoBehaviour {
             }
             else
             {
-                if (closedposition.x - transform.position.x <= length - 0.01 && closedposition.x - transform.position.x >= -0.01)
+                if (closedposition.x - transform.position.x <= length  && closedposition.x - transform.position.x >= -0.01)
                 {
                     transform.position = target;
                     print("open door");
                 }
                 //set the left boundry of the slide door
-                if (closedposition.x - transform.position.x > length - 0.01)
+                if (closedposition.x - transform.position.x > length )
                     transform.position = closedposition - new Vector3(length, 0, 0);
                 //set the right boundry of the slide door
                 if (closedposition.x - transform.position.x < 0.01f)

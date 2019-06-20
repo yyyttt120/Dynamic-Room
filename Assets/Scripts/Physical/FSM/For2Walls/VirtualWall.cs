@@ -27,7 +27,7 @@ public class VirtualWall : MonoBehaviour
         //initiation
         matchRWall = null;
         user = GameObject.Find("Camera (eye)");
-        user_tracker = user.transform.GetChild(4).GetComponent<SteamVR_TrackedObject>();
+        //user_tracker = user.transform.GetChild(4).GetComponent<SteamVR_TrackedObject>();
         dis_sur2user = 1000;
         dis_IP2user = 1000;
         angle_f = 180;
@@ -81,13 +81,13 @@ public class VirtualWall : MonoBehaviour
         }
     }
 
-    private float GetUserSpeed()
+    /*private float GetUserSpeed()
     {
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracker.index);
         Vector3 vel = device.velocity;
         vel.y = 0;
         return vel.magnitude;
-    }
+    }*/
 
     private void RWall_Matched()
     {

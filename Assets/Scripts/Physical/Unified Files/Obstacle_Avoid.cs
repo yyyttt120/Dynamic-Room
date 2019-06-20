@@ -6,7 +6,7 @@ public class Obstacle_Avoid : MonoBehaviour
 {
 
     private SteamVR_TrackedObject tracker;
-    private SteamVR_Controller.Device device;
+    //private SteamVR_Controller.Device device;
     private GameObject target;
     private Robotic_Wall rWall;
     private int layMask = (1 << 9) | (1 << 10);//player and robotic wall layers
@@ -81,12 +81,11 @@ public class Obstacle_Avoid : MonoBehaviour
             //{
             //print("huo" + gameObject.name);
             Color color = Color.red;
-            Debug.DrawRay(this.transform.position, moveDirection.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
+            //Debug.DrawRay(this.transform.position, moveDirection.normalized * Mathf.Min(detectRange, wallPredict.magnitude), color, 0.1f, true);
             if (Physics.Raycast(this.transform.position, moveDirection.normalized, out hit, Mathf.Min(detectRange, wallPredict.magnitude), layMask))
             {
-                //
                 Color color_y = Color.yellow;
-                Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
+                //Debug.DrawRay(hit.point, hit.normal, color_y, 0.1f, true);
                 if (hit.collider.gameObject != gameObject)
                 {
                     Vector3 hitNormal = hit.normal;
@@ -99,15 +98,11 @@ public class Obstacle_Avoid : MonoBehaviour
                         Vector3 forward = gameObject.GetComponent<Wall_To_Target>().GetTarget().transform.forward;
                         if (Vector3.Dot(forward, paraSpeed) > 0)
                             paraSpeed = -paraSpeed;
-                        else
-                            paraSpeed = paraSpeed;
                     }
                     //when the robotic wall is not in wall_state, choose the most efficient direction
                     else
                     {
-                        if (Vector3.Dot(moveDirection.normalized, paraSpeed) > 0)
-                            paraSpeed = paraSpeed;
-                        else
+                        if (Vector3.Dot(moveDirection.normalized, paraSpeed) < 0)
                             paraSpeed = -paraSpeed;
                     }
                     //print(gameObject.name + "ray hit" + hit.collider.gameObject.name);
@@ -116,7 +111,7 @@ public class Obstacle_Avoid : MonoBehaviour
                 }
                 /*else
                     avoidanceVector = Vector3.zero;*/
-                double maxAvoidanceVector = 1 / hit.distance * 50;
+                double maxAvoidanceVector = 1 / hit.distance * 80;
                 if (avoidanceVector.magnitude > maxAvoidanceVector)
                     avoidanceVector = avoidanceVector.normalized * (float)maxAvoidanceVector;
 
@@ -190,7 +185,7 @@ public class Obstacle_Avoid : MonoBehaviour
         return close;
     }
 
-    private Vector3 GetMovingDir()
+    /*private Vector3 GetMovingDir()
     {
         double angle;//the angle between wall's right direction and velocity of the wall
         angle = rWall.roomba_controller.AngleSigned(-this.transform.forward, device.velocity, Vector3.up);
@@ -198,7 +193,7 @@ public class Obstacle_Avoid : MonoBehaviour
             return this.transform.right;
         else
             return -this.transform.right;
-    }
+    }*/
 
     public void SetDetectDirection(GameObject target)
     {

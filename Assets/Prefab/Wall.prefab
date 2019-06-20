@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 7506137794051656016}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.020018, y: 0.0505632, z: 4}
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_Children: []
   m_Father: {fileID: 7506137794096708970}
   m_RootOrder: 0
@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisWallType: 0
+  thisController: 1
 --- !u!65 &1070916718534603528
 BoxCollider:
   m_ObjectHideFlags: 0

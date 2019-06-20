@@ -10,6 +10,7 @@ public class Allocator : MonoBehaviour
     public ServerObject dataRequester;
     public Detect_Area_forML detectBlock;
     private GameObject standbyPoints;
+    private GameObject center;
     GameObject user;
 
     private List<GameObject> standbyList;
@@ -29,6 +30,7 @@ public class Allocator : MonoBehaviour
         {
             standbyList.Add(standbyPoints.transform.GetChild(i).gameObject);
         }
+        center = GameObject.Find("Center");
     }
 
     // Update is called once per frame
@@ -39,11 +41,11 @@ public class Allocator : MonoBehaviour
         rWalls[0].wallToTarget_controller.Robot_Move_Switch(true);
        
         //change the robotic wall, once the target was changed
-        if (targetNum != 0  && targetNum != lastFrameTarget)
+        /*if (targetNum != 0  && targetNum != lastFrameTarget)
         {
             SwitchRWall();
         }
-        lastFrameTarget = targetNum;
+        lastFrameTarget = targetNum;*/
 
         if (targetNum != 0)
         //rWalls[0].wallToTarget_controller.Set_Target(vWalls[targetNum-1].gameObject.transform.GetChild(0).gameObject);
@@ -57,7 +59,8 @@ public class Allocator : MonoBehaviour
             vWalls[targetNum - 1].SetMatchRWall(rWalls[targetRWall].stateController);
             //rWalls[targetRWall].stateController.GetBehaviour<Wall_State>().SetTargetWall(vWalls[targetNum - 1].gameObject);
             //set virtual target for another robotic wall
-            //int otherTarget = FindCorner(targetNum);
+            /*int otherTarget = FindCorner(targetNum);
+            vWalls[otherTarget -1].SetMatchRWall(rWalls[targetRWall == 0 ? 1 : 0].stateController);*/
             //print($"other target = {otherTarget}");
             GameObject otherTarget = FindOtherTarget(targetNum);
             if (otherTarget != null)
@@ -80,8 +83,8 @@ public class Allocator : MonoBehaviour
     private GameObject FindStandbyPoint(Robotic_Wall rwall)
     {
         standbyList.Sort(delegate (GameObject point1, GameObject point2) {
-            Vector3 vec1 = point1.transform.position - rwall.transform.position;
-            Vector3 vec2 = point2.transform.position - rwall.transform.position;
+            Vector3 vec1 = point1.transform.position - center.transform.position;
+            Vector3 vec2 = point2.transform.position - center.transform.position;
             vec1.y = 0;
             vec2.y = 0;
             if (vec1.magnitude > vec2.magnitude)
@@ -129,7 +132,7 @@ public class Allocator : MonoBehaviour
     //allocate a robotic wall to target virtual wall based on distance
     private int AllocateRWall(GameObject targetWall)
     {
-        if (DistanceToVirWall(rWalls[0].transform.GetChild(0).gameObject, targetWall) >= DistanceToVirWall(rWalls[1].transform.GetChild(0).gameObject, targetWall))
+        if (DistanceToVirWall(rWalls[0].gameObject, targetWall.transform.GetChild(0).gameObject) >= DistanceToVirWall(rWalls[1].gameObject, targetWall.transform.GetChild(0).gameObject))
             return 1;
         else
             return 0;

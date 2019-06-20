@@ -8,7 +8,7 @@ public class Wall_Requester : MonoBehaviour {
     public GameObject user;
     private List<GameObject> solvedWallList;
     //private List<Animator> roboWallList;
-    private GameObject releasedWall;
+    //private GameObject releasedWall;
     private Vector3 colliderSize;
     private Vector3 colliderCenter;
     public SteamVR_TrackedObject user_tracker = null;
@@ -146,10 +146,10 @@ public class Wall_Requester : MonoBehaviour {
 
     }*/
 
-    public GameObject GetReleasedWall()
+    /*public GameObject GetReleasedWall()
     {
         return releasedWall;
-    }
+    }*/
 
     public List<GameObject> GetSolvedList()
     {

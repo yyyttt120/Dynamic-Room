@@ -10,7 +10,7 @@ public class FSMSystem : MonoBehaviour {
     public GameObject r_wall3;
     public GameObject r_wall4;
 
-    private GameObject wall;//virtual wall wait be allocated a robotic wall
+    //private GameObject wall;//virtual wall wait be allocated a robotic wall
                             // Use this for initialization
 
     private void Awake()
@@ -126,10 +126,10 @@ return null;
         return null;
     }
 
-    public GameObject SendToWallState()
+    /*public GameObject SendToWallState()
     {
         return wall;
-    }
+    }*/
 
     private float DistanceToVirWall(GameObject virWall, GameObject phyWall)
     {

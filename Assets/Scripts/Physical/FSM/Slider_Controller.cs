@@ -8,6 +8,7 @@ public class Slider_Controller : MonoBehaviour {
     public wallType thisWallType = wallType.flat;
     public enum ControllerType { simulation,real};
     public ControllerType thisController = ControllerType.real;
+    private float wallSize;
     private GameObject slider;
     private GameObject user;
     private LayerMask layer = 1 << 8;
@@ -20,6 +21,11 @@ public class Slider_Controller : MonoBehaviour {
             user = GameObject.Find("Camera (eye)").gameObject;
         else
             user = GameObject.Find("Cylinder").gameObject;
+        //print($"angle = {transform.eulerAngles.y}");
+        if((transform.eulerAngles.y < 95 && transform.eulerAngles.y > 85) || (transform.eulerAngles.y < 275 && transform.eulerAngles.y > 265))
+            wallSize = gameObject.GetComponent<Renderer>().bounds.size.z;
+        else
+            wallSize = gameObject.GetComponent<Renderer>().bounds.size.x;
         //user = GameObject.Find("Cylinder").gameObject;
     }
 	
@@ -43,13 +49,29 @@ public class Slider_Controller : MonoBehaviour {
             range = 10f;
         if (Physics.Raycast(user.transform.position, raydir, out hit, range, layer))
         {
-            //print("hit point =" + hit.collider.gameObject.name);
+            //print("hit point =" + hit.collider.gameObject.name);d
             if (hit.collider.gameObject == this.gameObject)
             {
                 //print("hit");
                 slider.SetActive(true);
-                //to avoid user and target stay in a staight line which will influece the obstacle avoidance
-                slider.transform.position = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+                //set a boundary for the silder, it it's 0.4m smaller than wall mesh both at left and right side
+                Vector3 userPos_local = transform.InverseTransformPoint(hit.point);
+                //print($"local pos = {userPos_local}");
+                //print($"wallsize = {wallSize}");
+                if (userPos_local.x > 0.5 - (0.4 / wallSize))
+                {
+                    Vector3 temp = slider.transform.localPosition;
+                    temp.x = (float)(0.5 - (0.4 / wallSize));
+                    slider.transform.localPosition = temp;
+                }
+                else if(userPos_local.x < -0.5 + (0.4 / wallSize))
+                {
+                    Vector3 temp = slider.transform.localPosition;
+                    temp.x = (float)(-0.5 + (0.4 / wallSize));
+                    slider.transform.localPosition = temp;
+                }
+                else
+                    slider.transform.localPosition = new Vector3(userPos_local.x, slider.transform.localPosition.y, 0) - new Vector3(0,0,1);
                 slider.transform.forward = hit.normal;
                 visible = true;
             }
@@ -65,6 +87,7 @@ public class Slider_Controller : MonoBehaviour {
             slider.SetActive(false);
         }
 	}
+
 
     public bool GetVisible()
     {

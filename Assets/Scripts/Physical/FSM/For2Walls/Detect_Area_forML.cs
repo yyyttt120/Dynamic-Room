@@ -20,8 +20,16 @@ public class Detect_Area_forML : MonoBehaviour
     {
         if (other.tag.CompareTo("Wall") == 0)
         {
-            print($"*************{other.name} detected");
-            AddWall(other.gameObject);
+            if (other.gameObject.transform.GetChild(0).gameObject.activeSelf)
+            {
+                print($"*************{other.name} detected");
+                AddWall(other.gameObject);
+            }
+            else
+            {
+                if (wallsInAreaList.Contains(other.gameObject))
+                    wallsInAreaList.Remove(other.gameObject);
+            }
         }
     }
 

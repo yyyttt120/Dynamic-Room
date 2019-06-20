@@ -7,17 +7,17 @@ public class DoorFrameState : StateMachineBehaviour {
     //private GameObject slider;
     //private GameObject user;
     private Robotic_Wall roboticWall;
-    private Wall_Requester wall_requester;
+    //private Wall_Requester wall_requester;
     private GameObject doorWall;//the door where the wall settle
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         roboticWall=animator.gameObject.GetComponent<Robotic_Wall>();
-        wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
+        //wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
         //user = GameObject.Find("Camera (eye)").gameObject;
         //roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
         //doorWall = GameObject.Find("DoorWall");
         Debug.Log("doorwall =" + doorWall.name);
-        wall_requester.SetWallSolved(doorWall);
+        //wall_requester.SetWallSolved(doorWall);
     }
 
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -28,9 +28,9 @@ public class DoorFrameState : StateMachineBehaviour {
             slider.transform.position = new Vector3(slider.transform.position.x, slider.transform.position.y, user.transform.position.z);*/
         Debug.Log("doorwall =" + doorWall.name);
         //ensure this robotic wall is in solved list
-        wall_requester.SetWallSolved(doorWall);
+        //wall_requester.SetWallSolved(doorWall);
         //disable obstacle avoidance module
-        animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = false;
+        //animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = false;
         roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
         roboticWall.wallToTarget_controller.Set_Target(frame);
         if (roboticWall.wallToTarget_controller.Get_State())
@@ -53,9 +53,9 @@ public class DoorFrameState : StateMachineBehaviour {
 	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         roboticWall.wallToTarget_controller.Robot_Move_Switch(false);
         //reset obstacle avoidance module
-        animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
+        //animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
         //release the wall the door settle in
-        wall_requester.ReleaseWall(animator.GetBehaviour<Wall_State>().GetWall());
+        //wall_requester.ReleaseWall(animator.GetBehaviour<Wall_State>().GetWall());
         //animator.GetBehaviour<DoorState>().SetDoor(frame.transform.GetChild(0).gameObject);
     }
 

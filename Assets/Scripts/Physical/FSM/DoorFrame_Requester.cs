@@ -26,11 +26,17 @@ public class DoorFrame_Requester : MonoBehaviour
     {
         if (other.tag.CompareTo("Slider") == 0)
         {
+            print("frame**************");
             slider = other.gameObject;
             //print("slider enter:" + other.gameObject.name);
             GameObject wall = other.gameObject.transform.parent.gameObject;
-            List<Animator> statesList = statesController.GetStatesList();
-            foreach (Animator states in statesList)
+            robotic_wall_states = wall.GetComponent<VirtualWall>().GetMatchRWall();
+            robotic_wall_states.SetBool("SliderEnterDoor", true);
+            robotic_wall_states.GetBehaviour<DoorFrameState>().SetFrame(this.gameObject.transform.GetChild(0).gameObject);
+            robotic_wall_states.GetBehaviour<DoorFrameState>().SetDoorWall(wall);
+            //List<Animator> statesList = statesController.GetStatesList();
+
+            /*foreach (Animator states in statesList)
             {
                 if (states.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
                     if (states.GetBehaviour<Wall_State>().GetWall() == wall)
@@ -42,7 +48,7 @@ public class DoorFrame_Requester : MonoBehaviour
                         states.GetBehaviour<DoorFrameState>().SetDoorWall(wall);
                         //states.GetBehaviour<DoorFrameState>().SetSlider(other.gameObject);
                     }
-            }
+            }*/
 
         }
     }
@@ -51,10 +57,15 @@ public class DoorFrame_Requester : MonoBehaviour
     {
         if (other.tag.CompareTo("Slider") == 0)
         {
+            print("frame**************");
             slider = other.gameObject;
             //print("slider enter:" + other.gameObject.name);
             GameObject wall = other.gameObject.transform.parent.gameObject;
-            List<Animator> statesList = statesController.GetStatesList();
+            robotic_wall_states = wall.GetComponent<VirtualWall>().GetMatchRWall();
+            robotic_wall_states.SetBool("SliderEnterDoor", true);
+            robotic_wall_states.GetBehaviour<DoorFrameState>().SetFrame(this.gameObject.transform.GetChild(0).gameObject);
+            robotic_wall_states.GetBehaviour<DoorFrameState>().SetDoorWall(wall);
+            /*List<Animator> statesList = statesController.GetStatesList();
             foreach (Animator states in statesList)
             {
                 if (states.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
@@ -67,7 +78,7 @@ public class DoorFrame_Requester : MonoBehaviour
                         states.GetBehaviour<DoorFrameState>().SetDoorWall(wall);
                         //states.GetBehaviour<DoorFrameState>().SetSlider(other.gameObject);
                     }
-            }
+            }*/
 
         }
     }

@@ -7,7 +7,9 @@ public class ElevatorEmergency : MonoBehaviour {
     public GameObject smoke;
     public AudioSource emergencyWarning;
     public GameObject emergencyButton;
-    private bool emergency;
+    public bool emergency;
+    public GameObject door_manual;
+    public SteamVR_TrackedObject controller;
     private bool flag;
 
     /// <summary>
@@ -55,22 +57,45 @@ public class ElevatorEmergency : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(SceneManager.GetActiveScene().buildIndex == 2 ||Input.GetKeyUp(KeyCode.E))
+        SteamVR_Controller.Device device = SteamVR_Controller.Input((int)controller.index);
+		if(SceneManager.GetActiveScene().buildIndex == 2 ||/*Input.GetKeyUp(KeyCode.E)*/device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
         {
             smoke.SetActive(true);
             if (!flag)
             {
                 emergencyWarning.Play();
                 StartGlinting();
+                RenderSettings.fog = true;
+                RenderSettings.fogDensity = 0;
                 flag = true;
             }
             emergency = true;
         }
+        if (emergency)
+        {
+            if (RenderSettings.fogDensity < 0.2)
+                FogFade(-0.003f);
+        }
+        if (emergencyButton.GetComponent<ElevatorButton>().GetButton())
+            emergency = false;
+        if (flag && !emergency)
+            door_manual.GetComponent<Door_slide_modified>().enabled = true;
 	}
 
     public bool GetEmergency()
     {
         return emergency;
+    }
+
+    private void FogFade(float speed)
+    {
+        RenderSettings.fogDensity = RenderSettings.fogDensity - speed;
+        /*if (RenderSettings.fogDensity < 0.3)
+            RenderSettings.fogDensity = 0.3f;*/
+        /*for(int i = 0; i < 8; i++)
+        {
+            mylight.transform.GetChild(i).GetChild(0).GetComponent<Light>().range = 0.7f;
+        }*/
     }
 
     private void OnValidate()
