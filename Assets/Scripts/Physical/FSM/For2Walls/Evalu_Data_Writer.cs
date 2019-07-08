@@ -8,7 +8,7 @@ public class Evalu_Data_Writer : MonoBehaviour
 {
     private FileStream fs_wait_time;
     private FileStream fs_accur;
-    public User_Spd_Display user_spd_display;
+    //public User_Spd_Display user_spd_display;
 
     int count_touch = 0;
     int count_encounterd_touch = 0;//count how many time the user touch virtual wall and encounterd by the robotic wall
@@ -57,8 +57,8 @@ public class Evalu_Data_Writer : MonoBehaviour
             }
             sb.AppendLine();
         }*/
-        float user_spd = user_spd_display.GetUserSpd();
-        sb.Append(output + $" {user_spd}");
+        //float user_spd = user_spd_display.GetUserSpd();
+        sb.Append(output /*+ $" {user_spd}"*/);
         sb.AppendLine();
         //Using system.Text
         byte[] map = Encoding.UTF8.GetBytes(sb.ToString());

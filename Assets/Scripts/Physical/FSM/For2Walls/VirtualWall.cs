@@ -9,7 +9,10 @@ public class VirtualWall : MonoBehaviour
     private GameObject user;
     private SteamVR_TrackedObject user_tracker;
     private int layMask = (1 << 8);
+    [HideInInspector] public bool matched;// true, when it's matched by a robotic wall
+    public bool touching;//be true, when the virtual wall is correctly matched and is touching by user
     public Interactable_Points[] IPs;
+    private Vector3 originalPos;
 
     //for evaluation data
     private GameObject evalu_Data_Writer;
@@ -26,6 +29,7 @@ public class VirtualWall : MonoBehaviour
     {
         //initiation
         matchRWall = null;
+        matched = false;
         user = GameObject.Find("Camera (eye)");
         //user_tracker = user.transform.GetChild(4).GetComponent<SteamVR_TrackedObject>();
         dis_sur2user = 1000;
@@ -33,6 +37,7 @@ public class VirtualWall : MonoBehaviour
         angle_f = 180;
         untouched_amount_IP = IPs.Length;
         evalu_Data_Writer = GameObject.Find("Evalu_Data_Writer");
+        originalPos = transform.position;
     }
 
     // Update is called once per frame
@@ -42,15 +47,24 @@ public class VirtualWall : MonoBehaviour
             print($"{gameObject.name} match rwall = {matchRWall.name}");
         else
             print($"{gameObject.name} match rwall = null");*/
+        if (!transform.GetChild(0).gameObject.activeSelf || transform.GetChild(0).gameObject == null)
+            matchRWall = null;
         if (matchRWall == null)
         {
+            touching = false;
             print($"{gameObject.name} release wall");
-            if(matchRWall_record != null)
+            if (matchRWall_record != null)
+            {
                 matchRWall_record.GetBehaviour<Wall_State>().SetReadyRelease(true);
-
+                matched = matchRWall_record.GetBehaviour<Wall_State>().matching;
+                if(!matched)
+                    matchRWall_record = null;
+            }
+            transform.position = originalPos;
         }
         else
         {
+            matched = true;
             print($"{gameObject.name} match {matchRWall.name}");
             matchRWall_record = matchRWall;
             matchRWall.SetInteger("NearWallCounter", 10);
@@ -63,21 +77,30 @@ public class VirtualWall : MonoBehaviour
         GetDis_IP2userNIP_amount();
         GetAngle_f();
         //write evaluation data
+        RWall_Matched();
         if (timerStart)
         {
             timer += Time.deltaTime;
         }
-        RWall_Matched();
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag.CompareTo("Player") == 0)
+        if(other.tag.CompareTo("Hand") == 0)
         {
             print("timer start");
             timerStart = true;
             timer = 0;
             //userSpd = GetUserSpeed();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag.CompareTo("Hand") == 0)
+        {
+            touching = false;
         }
     }
 
@@ -89,19 +112,50 @@ public class VirtualWall : MonoBehaviour
         return vel.magnitude;
     }*/
 
+    /* if the asigned robotic walls correctly matched this virtual wall, stop the timer */
     private void RWall_Matched()
     {
         if (matchRWall != null)
         {
-            Vector3 dis = matchRWall.transform.position - transform.GetChild(0).position;
+            Vector3 dis = matchRWall.transform.position - matchRWall.GetComponent<RoombaFeedback_Test>().FindRoomba(transform.GetChild(0).position,transform.forward);
             dis.y = 0;
             double angle = AngleSigned(matchRWall.transform.forward, this.transform.forward, Vector3.up);
             if (dis.magnitude < 0.15f && ((angle < 10 && angle > -10)|| (angle >170 || angle < -170)) )
             {
-                print("timer stop");
-                if(timerStart)
+                //print("timer stop");
+                if (timerStart)
+                {
                     evalu_Data_Writer.GetComponent<Evalu_Data_Writer>().WriteData(gameObject.name + " " + timer.ToString());
+                    touching = true;
+                }
                 timerStart = false;
+                calibrateVWall();
+            }
+        }
+    }
+
+    private void calibrateVWall()
+    {
+        
+        //if (matchRWall != null)
+        {
+            print("calibating******************");
+            GameObject matchedSide;
+            Wall_To_Target.Side side = matchRWall.GetComponent<Wall_To_Target>().matchedSide;
+            if (side == Wall_To_Target.Side.front)
+                matchedSide = matchRWall.transform.GetChild(1).gameObject;
+            else
+                matchedSide = matchRWall.transform.GetChild(2).gameObject;
+
+            if (Mathf.Abs(transform.forward.x) > 0)
+            {
+                transform.GetChild(1).position = new Vector3(matchedSide.transform.position.x, transform.position.y, transform.position.z);
+                print($"{this.name} calibrate in x axis");
+            }
+            else
+            {
+                transform.GetChild(1).position = new Vector3(transform.position.x, transform.position.y, matchedSide.transform.position.z);
+                print($"{this.name} calibrate in z axis");
             }
         }
     }
@@ -169,18 +223,25 @@ public class VirtualWall : MonoBehaviour
         {
             float min = 1000;
             int amount = 0;
-            foreach (Interactable_Points ip in IPs)
+            try
             {
-                //dis_IP2user
-                float dis_temp = GetDistance(ip.gameObject, user);
-                if (dis_temp < min)
-                    min = dis_temp;
-                //untouched_amount_IP
-                if (!ip.GetTouched())
-                    amount++;
+                foreach (Interactable_Points ip in IPs)
+                {
+                    //dis_IP2user
+                    float dis_temp = GetDistance(ip.gameObject, user);
+                    if (dis_temp < min)
+                        min = dis_temp;
+                    //untouched_amount_IP
+                    if (!ip.GetTouched())
+                        amount++;
+                }
+                dis_IP2user = min;
+                untouched_amount_IP = amount;
             }
-            dis_IP2user = min;
-            untouched_amount_IP = amount;
+            catch(System.NullReferenceException e1)
+            {
+                print($"{this.name} have no interactable points");
+            }
         }
         else
         {

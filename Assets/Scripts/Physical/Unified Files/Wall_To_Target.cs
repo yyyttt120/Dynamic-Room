@@ -15,6 +15,8 @@ public class Wall_To_Target : MonoBehaviour {
     public int p2 = 600;//parameter for translation(distance)
     public int p = 12;//parameter for rotation
     public int d_rotate = 200;//parameter for rotation
+    public enum Side { front,back}
+    public Side matchedSide = Side.front;
 
     //**** turn it false in real demo ***************
     public bool switch_button = false;
@@ -52,9 +54,9 @@ public class Wall_To_Target : MonoBehaviour {
         else
         {
             anim.SetBool("NoTarget", false);
-            //print(this.name + "target =" + target.name + target.transform.parent.name);
+            print($"wallTotarget: {this.name} target is {target.name}");
             //print("avoidance = " + avoidance.gameObject.name);
-            avoidance.SetDetectDirection(target);
+            //avoidance.SetDetectDirection(target);
             //print("start = " + start);
             bool state = !start_translate && !start_rotate;
             //print("state =" + state);
@@ -88,7 +90,7 @@ public class Wall_To_Target : MonoBehaviour {
             }
             Color color = Color.blue;
             //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
-            if (time >= 0.02)
+            if (time >= 0.05)
             {
                 time = 0;
                 if (switch_button)
@@ -99,7 +101,7 @@ public class Wall_To_Target : MonoBehaviour {
                         //print(this.name + "target =" + target.name);
                         if (start_translate)
                         {
-                            avoidTarget = target.transform.position + avoidance.GetAviodanceVector();
+                            avoidTarget = target.transform.position /*+ avoidance.GetAviodanceVector()*/;
                             //Debug.DrawRay(avoidTarget, Vector3.forward * 1f, color,0.1f,true);
                             //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
                             if (robotic_wall_dir == Wall_Mov_Dir.Left_Right)
@@ -116,9 +118,15 @@ public class Wall_To_Target : MonoBehaviour {
                         //print("rotating");
                         double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
                         if (angle > -90 && angle < 90)
+                        {
                             start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
+                            matchedSide = Side.front;
+                        }
                         else
+                        {
                             start_rotate = !controll.Rotation(-target.transform.forward, wall, wallnum, p, d_rotate, true);
+                            matchedSide = Side.back;
+                        }
                     }
 
                 }

@@ -1,9 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RVO;
+using Vector2 = RVO.Vector2;
 
 public class FSMSystem : MonoBehaviour {
     private List<Animator> statesList = new List<Animator>();
+    private float timer;
+    private float timeStep = 0.04f;//time step in simulatin for RVO
+    private GameObject[] virtualWalls;
+    private VirtualWall[] vwalls;
+    public float maxSpeed = 0.5f;//max speed of robotic walls
 
     public GameObject r_wall1;
     public GameObject r_wall2;
@@ -16,92 +23,72 @@ public class FSMSystem : MonoBehaviour {
     private void Awake()
     {
         Application.targetFrameRate = 50;
+        //add a rvo agent for user
     }
     void Start () {
-        //AddState(r_wall1.GetComponent<FSMState>());
-        //AddState(r_wall2.GetComponent<FSMState>());
+        timer = 0;
+        //default set for RVO agent
+        Simulator.Instance.setTimeStep(timeStep);
+        Simulator.Instance.setAgentDefaults(2.0f,4,5.0f,5.0f,0.5f,maxSpeed,new Vector2(0.0f,0.0f));
+        Simulator.Instance.addAgent(new Vector2(0, 0));
+        //prepare the robotic walls
         if (r_wall1.activeSelf)
-            statesList.Add(r_wall1.GetComponent<Animator>());
-        if(r_wall2.activeSelf)
-            statesList.Add(r_wall2.GetComponent<Animator>());
+            addRwall(r_wall1);
+        if (r_wall2.activeSelf)
+            addRwall(r_wall2);
         if (r_wall3.activeSelf)
-            statesList.Add(r_wall3.GetComponent<Animator>());
+            addRwall(r_wall3);
         if (r_wall4.activeSelf)
-            statesList.Add(r_wall4.GetComponent<Animator>());
+            addRwall(r_wall4);
+
+        /* find all the virtual walls with tag */
+        virtualWalls = GameObject.FindGameObjectsWithTag("Wall");
+        vwalls = new VirtualWall[virtualWalls.Length];
+        for(int i = 0;i< virtualWalls.Length; i++)
+        {
+            vwalls[i] = virtualWalls[i].GetComponent<VirtualWall>();
+        }
+    }
+
+    //add the the robotic wall into robotic wall list,
+    //add a rvo agent for this robotic wall and bind the sid to it's rvo_agent component
+    private int addRwall(GameObject rwall)
+    {
+        statesList.Add(rwall.GetComponent<Animator>());
+        int i = Simulator.Instance.addAgent(new Vector2(rwall.transform.position.x, rwall.transform.position.z));
+        RVO_agent agent = rwall.GetComponent<RVO_agent>();
+        if (agent != null && agent.enabled)
+            agent.sid = i;
+        else
+            rwall.GetComponent<RVO_agent_Ideal>().sid = i;
+        return i;
     }
 
     // Update is called once per frame
     void Update() {
-        /*foreach(Animator states in statesList)
+        //start the simulation for rvo algorithm
+        timer += Time.deltaTime;
+        if (timer > timeStep)
         {
-            MinusCounter("NearWallCounter", states);
-        }*/
-	}
+            Simulator.Instance.doStep();
+            timer = 0;
 
-    /*private void AddState(FSMState states)
-    {
-        
-        if (statesList == null)
-        {
-            Debug.LogError("FSM ERROR");
-        }
-
-        
-        if (statesList.Count == 0)
-        {
-            statesList.Add(states);
-            return;
-        }
-
-        
-        if (!statesList.Contains(states))
-        {
-            statesList.Add(states);
-        }
-
-    }*/
-
-    //answer the request from Wall_requester and allocate robotic walls to this request
-
-    /*public Animator Allocate_wall(GameObject targetWall,List<Animator> speStateList)
-    {
-        string distanceList = "distance =";
-        speStateList = new List<Animator>();
-        foreach(Animator ani in statesList)
-        {
-            if (!speStateList.Contains(ani))
-                speStateList.Add(ani);
-        }
-        foreach (Animator ani in speStateList)
-        {
-            distanceList += ani.gameObject.name + DistanceToVirWall(targetWall, ani.gameObject)+ " ";
-        }
-        print(distanceList);
-        // sort the robotic walls based on the distance from target virtual wall
-        speStateList.Sort(delegate (Animator phyW1, Animator phyW2)
-        {
-            if (DistanceToVirWall(targetWall, phyW1.gameObject) > DistanceToVirWall(targetWall, phyW2.gameObject))
-                return 1;
-            else
-                return -1;
-        });
-        foreach( Animator states in speStateList)
-        {
-            if (states.GetCurrentAnimatorStateInfo(0).IsName("Standby"))
+            /*check if two virtual walls are asigned a same robotic wall*/
+            for (int i = 0; i < vwalls.Length - 1; i++)
             {
-                //...do transform from stand_by to wall condition
-               /* int counter = states.GetInteger("NearWallCounter") + 2;
-                if (counter > 100)
-                    counter = 100;
-                states.SetInteger("NearWallCounter", counter);*/
-    /* wall = targetWall;
-     //Transform_StandbyToWall(states, wall);
-     return states;
- }
-}
-Debug.Log("no robotic wall is in standby state");
-return null;
-}*/
+                for (int j = i + 1; j < vwalls.Length; j++)
+                {
+                    if (vwalls[i].GetMatchRWall() == null || vwalls[j].GetMatchRWall() == null)
+                        continue;
+                    else if (vwalls[i].GetMatchRWall() == vwalls[j].GetMatchRWall())
+                        vwalls[j].SetMatchRWall(null);
+
+                }
+            }
+        }
+
+        
+	}
 
     public List<Animator> GetStatesList()
     {

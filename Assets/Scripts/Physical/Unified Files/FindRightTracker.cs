@@ -8,6 +8,7 @@ public class FindRightTracker : MonoBehaviour
 {
     private SteamVR_TrackedObject[] trackers;
     public string serialID;
+    public string SerialID_current;
     private int index;
     private int timer = 0;
     private bool startChangeIndex = false;
@@ -33,7 +34,7 @@ public class FindRightTracker : MonoBehaviour
         //reset the axis of this object
         if (resetAxis)
         {
-            transform.rotation = Quaternion.LookRotation(transform.up,transform.forward);
+            transform.parent.rotation = Quaternion.LookRotation(transform.parent.up,transform.parent.forward);
             resetAxis = false;
         }
 
@@ -47,10 +48,11 @@ public class FindRightTracker : MonoBehaviour
         }*/
         if (/*startChangeIndex */ timer > 100 && tries <12)
         {
-            if (GetSerialID(transform.parent.GetComponent<SteamVR_TrackedObject>()) != serialID)
+            if (GetSerialID(transform.parent.parent.GetComponent<SteamVR_TrackedObject>()) != serialID)
             {
+                print(GetSerialID(transform.parent.parent.GetComponent<SteamVR_TrackedObject>()));
                 //int index = (int)transform.parent.GetComponent<SteamVR_TrackedObject>().index;
-                transform.parent.GetComponent<SteamVR_TrackedObject>().SetDeviceIndex(tries);
+                transform.parent.parent.GetComponent<SteamVR_TrackedObject>().SetDeviceIndex(tries);
                 tries++;
                 /*foreach (SteamVR_TrackedObject tracker in trackers)
                 {
@@ -71,7 +73,8 @@ public class FindRightTracker : MonoBehaviour
         StringBuilder sb = new StringBuilder();
         OpenVR.System.GetStringTrackedDeviceProperty(index, ETrackedDeviceProperty.Prop_SerialNumber_String, sb, OpenVR.k_unMaxPropertyStringSize, ref error);
         var probablyUniqueDeviceSerial = sb.ToString();
-        print($"serial number = {probablyUniqueDeviceSerial}");
+        //print($"serial number = {probablyUniqueDeviceSerial}");
+        SerialID_current = probablyUniqueDeviceSerial;
         return probablyUniqueDeviceSerial;
     }
 }

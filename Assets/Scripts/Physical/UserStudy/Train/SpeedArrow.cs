@@ -8,6 +8,7 @@ public class SpeedArrow : MonoBehaviour
     private Glint glint;
 
     private int count_frame = 0;
+    private int count_silent_frame = 0;//count the frame which user keep statinary
     private float user_spd_average = 0;
     private float user_spd_ave_3s = 0;
     private float spd_sum = 0;
@@ -33,6 +34,7 @@ public class SpeedArrow : MonoBehaviour
         if (/*timer >= 3f*/count_frame >= 200)
         {
             user_spd_average = spd_sum / count_frame;
+            
             //txt.text = user_spd_average.ToString();
             //timer = 0;
             /*if (count_frame != 0)
@@ -45,7 +47,13 @@ public class SpeedArrow : MonoBehaviour
                 glint.StopGlinting();
             user_spd_average = 0;
             count_frame = 0;
+            count_silent_frame = 0;
             spd_sum = 0;
+        }
+        if(count_silent_frame > 100)
+        {
+            glint.StopGlinting();
+            count_silent_frame = 0;
         }
         //timer += Time.deltaTime;
 
@@ -54,7 +62,8 @@ public class SpeedArrow : MonoBehaviour
             count_frame++;
             spd_sum += spd;
         }
-
+        else
+            count_silent_frame++;
         
     }
 }

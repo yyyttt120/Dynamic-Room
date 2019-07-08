@@ -549,10 +549,10 @@ public class RoombaFeedback_Test : MonoBehaviour {
     // 2nd LOOP of PID output of distance
     public double Translate_vel_dis(double p_dis, double d_dis,int moveDirection)
     {
-        SteamVR_TrackedObject tracker = gameObject.transform.parent.GetComponent<SteamVR_TrackedObject>();
+        SteamVR_TrackedObject tracker = gameObject.transform.parent.parent.GetComponent<SteamVR_TrackedObject>();
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)tracker.index);
         //($"ref speed = {spd_ref}");
-        //print($"velocity = {device.velocity}");
+        //print($"{this.name} velocity = {device.velocity.magnitude}");
         double spd_err = spd_ref - Mathf.Abs(device.velocity.x)*moveDirection;
         double spd_d = device.velocity.magnitude*1000 - speed_lastframe;
         speed_lastframe = device.velocity.magnitude*1000;

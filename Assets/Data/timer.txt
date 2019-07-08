@@ -1,56 +1,34 @@
-Wall_front 6.533355 0.3242604
-222233 0
-Wall_front 7.155585 0
-Wall_R 12.94455 0
-Wall_back 12.08898 0
-Wall_L 14.70013 0
-Wall_back 15.46681 0
-Wall_front 0.8000008 0
-Wall_back 0.7555562 0
-Wall_front 0.1555556 0
-Wall_back 0.01111111 0
-Wall_front 0.01111111 0
-Wall_back 0.04444445 0
-666667 0
-Wall_L 0.01111111 0
-Wall_back 0.01111111 0
-Wall_R 5.16667 0
-Wall_front 5.744455 0
-Wall_L 8.366713 0
-67515
-Wall_front 0.06666667 0.2911187
-nt 4.499994 0.5202305
-Wall_back 0.01111111 0.3597594
-Wall_back 0.01111111 0.3451457
-Wall_R 1.488891 0.3451457
-Wall_front 3.899988 0.4310998
-Wall_L 0.9444456 0.4310998
-Wall_L 0.1444445 0.5337217
-Wall_front 0.7222228 0.5337217
-Wall_front 0.01111111 0.3475151
-Wall_front 0.01111111 0.3475151
-Wall_front 0.01111111 0.3475151
-Wall_L 0.4666667 0.3475151
-Wall_L 0.01111111 0.3313161
-Wall_L 0.4888889 0.4593817
-Wall_back 1.388891 0.4593817
-Wall_front 2.122225 0.3344346
-Wall_back 4.46666 0.2933671
-Wall_front 0.5 0.4600946
-0.3690192
-Wall_L 0.3888889 0.4301878
-Wall_front 4.977778 0.4301878
-Wall_front 0.01111111 0.4301878
-Wall_R 4.066655 0.4091063
-Wall_back 0.01111111 0.4091063
-Wall_back 0.01111111 0.4091063
-Wall_L 1.811115 0.4043367
-Wall_front 5.055557 0.4043367
-Wall_R 6.500021 0.4238032
-Wall_back 0.01111111 0.4238032
-Wall_back 0.01111111 0.3804071
-Wall_L 2.522222 0.4689654
-Wall_front 5.133336 0.4689654
-Wall_R 0.4333333 0.3969646
-Wall_back 0.01111111 0.3969646
-Wall_front 5.111114 1.145787
+Wall_L 0.8666676
+Wall_L 32.51015
+Wall_back 4.122211
+Wall_back 0
+Wall_back 0
+Wall_back 0
+Wall_back 0
+Wall_back 0.7000005
+Wall_back 0
+Wall_back 0.4888889
+Wall_back 0.3888889
+Wall_back 0
+Wall_back 0
+Wall_back 0
+Wall_back 0
+Wall_back 0.1444445
+Wall_back 0.9444456
+Wall_back 0
+Wall_back 0
+Wall_R 0
+Wall_R 0
+Wall_R 0
+Wall_front 4.98889
+Wall_front 0.3333333
+Wall_R 34.69925
+Wall_R 0
+Wall_back 0
+Wall_back 0
+Wall_back 0
+Wall_back 0
+Wall_back 0
+ck 0
+Wall_back 8.622272
+Wall_back 0.900001

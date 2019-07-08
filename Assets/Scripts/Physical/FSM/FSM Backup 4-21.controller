@@ -178,6 +178,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bae4c1b0b6949f4298c7b9cd27ac1b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  matching: 0
+  readyToRelease: 0
 --- !u!114 &114183934950404388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1037,7 +1039,7 @@ AnimatorStateMachine:
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 432, y: -48, z: 0}
-  m_EntryPosition: {x: 72, y: 84, z: 0}
+  m_EntryPosition: {x: 60, y: 96, z: 0}
   m_ExitPosition: {x: 720, y: 360, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 1102934419331172042}

@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4771002548012417926
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4771002548012417928}
+  - component: {fileID: 4771002548012417927}
+  m_Layer: 0
+  m_Name: RuneSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4771002548012417928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4771002548012417926}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.539798, y: 0.9413865, z: 3.2589934}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4771002548012417927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4771002548012417926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1e2c5892772c884cb4cb706dc68d10b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VWalls:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  Runes:
+  - {fileID: 9097245134035251202, guid: 1fe51165154e15f4cbce0fc015600b02, type: 3}
+  - {fileID: 6149286733093602513, guid: e417c373702ec9849abafe6a6774b571, type: 3}
+  - {fileID: 3881603639803276040, guid: 2288ae4ec46aa624d841d921c5f90eb4, type: 3}
+  - {fileID: 4221644130098803004, guid: 9e211c6927e43d641bcdaed77d9bf45d, type: 3}
+  - {fileID: 9009812766140510047, guid: 486fdf647883e1f42b31a6a1a9631ce8, type: 3}
+  gameComplete: {fileID: 0}

@@ -38,6 +38,7 @@ public class RoboticWall_Requester : MonoBehaviour
             if (!statesList.Contains(ani))
                 statesList.Add(ani);
         }
+        //print($"{this.name} timer = {timer}");
         /*print( gameObject.name + " user closed = " + userClose);
         if (!userClose)
         {
@@ -105,16 +106,17 @@ public class RoboticWall_Requester : MonoBehaviour
             //check if this wall isn't covered by other walls
             //Slider_Controller slider_Con = gameObject.GetComponent<Slider_Controller>();
             //userClose = true;
-
-            if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null)
+            print($"{this.name} matched = {vWall.matched}");
+            if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null && !vWall.matched)
             {
-                //print($"{gameObject.name} ready allocate");
+                print($"{gameObject.name} ready allocate");
                 //userClose = true;
                 //print("wall should ready " + gameObject.name);
-                timer += Time.deltaTime;
+                if(timer >= 0)
+                    timer += Time.deltaTime;
                 states = null;
                 //if (waitAllocate)
-                if(timer > 1f)
+                if(timer > 0.5f)
                 {
                     //waitAllocate = false;
                     states = Allocate_wall(gameObject);
@@ -144,6 +146,7 @@ public class RoboticWall_Requester : MonoBehaviour
 
         }
     }
+
 
     private void WaitRandomFrameAndAllocate()
     {

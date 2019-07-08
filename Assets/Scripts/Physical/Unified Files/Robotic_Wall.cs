@@ -11,6 +11,7 @@ public class Robotic_Wall: MonoBehaviour
     public RoombaFeedback_Test roomba_controller;
     public RoombaFeedback_Velocity roomba_controller_vel;
     public Animator stateController;
+    public RVO_agent rvoAgent;
 
     private void Start()
     {
@@ -38,6 +39,11 @@ public class Robotic_Wall: MonoBehaviour
 
         if (r_wall.GetComponent<RoombaFeedback_Velocity>() != null)
             this.roomba_controller_vel = r_wall.GetComponent<RoombaFeedback_Velocity>();
+        else
+            allSet = false;
+
+        if (r_wall.GetComponent<RVO_agent>() != null)
+            this.rvoAgent = r_wall.GetComponent<RVO_agent>();
         else
             allSet = false;
 

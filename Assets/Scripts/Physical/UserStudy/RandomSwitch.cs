@@ -6,13 +6,17 @@ public class RandomSwitch : MonoBehaviour
 {
     public GameObject[] VWalls;
     public AudioSource gameComplete;
-    private AudioSource buttonTouched;
+    public AudioSource buttonTouched;
+    public AudioSource buttonFinished;
+    public GameObject lights;
+    public bool gameover = false;
     private int counter = 0;
     private int touchCount = 0;
+    private int lastWallID = 0;
     // Start is called before the first frame update
     void Start()
     {
-        buttonTouched = GetComponent<AudioSource>();
+        lights.SetActive(false);
     }
 
     // Update is called once per frame
@@ -21,14 +25,17 @@ public class RandomSwitch : MonoBehaviour
         if(counter > 100)
         {
             counter = 0;
-            if (touchCount < 20)
+            if (touchCount < 5)
             {
                 buttonTouched.Play();
                 Blink();
             }
             else
             {
+                buttonFinished.Play();
                 gameComplete.Play();
+                lights.SetActive(true);
+                gameover = true;
             }
         }
     }
@@ -46,6 +53,11 @@ public class RandomSwitch : MonoBehaviour
     {
         touchCount++;
         int wallID = Random.Range(0, 3);
+        while (wallID == lastWallID)
+        {
+            wallID = Random.Range(0, 3);
+        }
+        lastWallID = wallID;
         float pos_x = Random.Range(-0.4f, 0.4f);
         float pos_y = Random.Range(-0.4f, 0.4f);
         GameObject wall = VWalls[wallID];

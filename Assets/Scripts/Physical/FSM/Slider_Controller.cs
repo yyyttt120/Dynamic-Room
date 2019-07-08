@@ -12,6 +12,7 @@ public class Slider_Controller : MonoBehaviour {
     private GameObject slider;
     private GameObject user;
     private LayerMask layer = 1 << 8;
+    private VirtualWall vwall;
     private bool visible = false;// if the wall can be seen by user (be hit by raycast), it's visible
                                  // Use this for initialization
     void Start()
@@ -27,6 +28,7 @@ public class Slider_Controller : MonoBehaviour {
         else
             wallSize = gameObject.GetComponent<Renderer>().bounds.size.x;
         //user = GameObject.Find("Cylinder").gameObject;
+        vwall = GetComponent<VirtualWall>();
     }
 	
 	// Update is called once per frame
@@ -47,44 +49,49 @@ public class Slider_Controller : MonoBehaviour {
             range = 10f;
         else
             range = 10f;
-        if (Physics.Raycast(user.transform.position, raydir, out hit, range, layer))
+
+        /* move the slider with user, if the user is not touching the correctly matched virtual wall  */
+        if (!vwall.touching)
         {
-            //print("hit point =" + hit.collider.gameObject.name);d
-            if (hit.collider.gameObject == this.gameObject)
+            if (Physics.Raycast(user.transform.position, raydir, out hit, range, layer))
             {
-                //print("hit");
-                slider.SetActive(true);
-                //set a boundary for the silder, it it's 0.4m smaller than wall mesh both at left and right side
-                Vector3 userPos_local = transform.InverseTransformPoint(hit.point);
-                //print($"local pos = {userPos_local}");
-                //print($"wallsize = {wallSize}");
-                if (userPos_local.x > 0.5 - (0.4 / wallSize))
+                //print("hit point =" + hit.collider.gameObject.name);d
+                if (hit.collider.gameObject == this.gameObject)
                 {
-                    Vector3 temp = slider.transform.localPosition;
-                    temp.x = (float)(0.5 - (0.4 / wallSize));
-                    slider.transform.localPosition = temp;
-                }
-                else if(userPos_local.x < -0.5 + (0.4 / wallSize))
-                {
-                    Vector3 temp = slider.transform.localPosition;
-                    temp.x = (float)(-0.5 + (0.4 / wallSize));
-                    slider.transform.localPosition = temp;
+                    //print("hit");
+                    slider.SetActive(true);
+                    //set a boundary for the silder, it it's 0.4m smaller than wall mesh both at left and right side
+                    Vector3 userPos_local = transform.InverseTransformPoint(hit.point);
+                    //print($"local pos = {userPos_local}");
+                    //print($"wallsize = {wallSize}");
+                    if (userPos_local.x > 0.5 - (0.4 / wallSize))
+                    {
+                        Vector3 temp = slider.transform.localPosition;
+                        temp.x = (float)(0.5 - (0.4 / wallSize));
+                        slider.transform.localPosition = temp;
+                    }
+                    else if (userPos_local.x < -0.5 + (0.4 / wallSize))
+                    {
+                        Vector3 temp = slider.transform.localPosition;
+                        temp.x = (float)(-0.5 + (0.4 / wallSize));
+                        slider.transform.localPosition = temp;
+                    }
+                    else
+                        slider.transform.localPosition = new Vector3(userPos_local.x, slider.transform.localPosition.y, 0) - new Vector3(0, 0, 1);
+                    slider.transform.forward = hit.normal;
+                    visible = true;
                 }
                 else
-                    slider.transform.localPosition = new Vector3(userPos_local.x, slider.transform.localPosition.y, 0) - new Vector3(0,0,1);
-                slider.transform.forward = hit.normal;
-                visible = true;
+                {
+                    visible = false;
+                    slider.SetActive(false);
+                }
             }
             else
             {
                 visible = false;
                 slider.SetActive(false);
             }
-        }
-        else
-        {
-            visible = false;
-            slider.SetActive(false);
         }
 	}
 

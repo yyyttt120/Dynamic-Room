@@ -142,7 +142,7 @@ public class Glint : MonoBehaviour
                 increase = _v <= minBrightness;
             }
             _material.SetColor(_colorName, Color.HSVToRGB(_h, _s, _v));
-            print("glinting");
+            //print("glinting");
             //_renderer.UpdateGIMaterials();
             yield return null;
         }

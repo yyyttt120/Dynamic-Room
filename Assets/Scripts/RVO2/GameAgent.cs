@@ -51,4 +51,5 @@ public class GameAgent : MonoBehaviour
                                                      dist*
                                                      new Vector2((float) Math.Cos(angle), (float) Math.Sin(angle)));
     }
+
 }

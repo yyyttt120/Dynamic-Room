@@ -5,11 +5,14 @@ using UnityEngine;
 public class Standby_Requester : MonoBehaviour {
     public Wall_Requester wall_requester;
     public GameObject user;
+    public enum algorithm { ml,detection};
+    public algorithm currentAlgorithm = algorithm.detection;
     //public GameObject test;
 
     private List<GameObject> slovedWallList;
     private List<GameObject> standby_list;
     private List<GameObject> standby_list_available;
+    private List<Animator> rWall_states_list;
 
     private GameObject center;//the center of the virtual room
     //private FSMSystem statesController;
@@ -39,29 +42,38 @@ public class Standby_Requester : MonoBehaviour {
             print("same side");
         else
             print("different side");*/
-            
+        if(rWall_states_list == null)
+        {
+            rWall_states_list = GameObject.Find("StatesController").GetComponent<FSMSystem>().GetStatesList();
+        }
 	}
 
     //allocate a standby point to the robotic wall
     public GameObject Allocate_StandbyPoint(GameObject roboticWall)
     {
         //print(roboticWall.name);
-        //sort the standby points by the distance between robotic wall and standby point, from small to large
-        foreach (GameObject stand in standby_list_available)
-        {
-            float dis = DistanceToVirWall(roboticWall, stand);
-            //print(stand.name + "distance =" + dis);
-        }
-        slovedWallList = wall_requester.GetSolvedList();
+        //slovedWallList = wall_requester.GetSolvedList();
         //sort with the distance from this robotic wall to standby points, the closet standby point shall be picked
-        standby_list_available.Sort(delegate (GameObject phyW1, GameObject phyW2)
+        standby_list_available.Sort(delegate (GameObject point1, GameObject point2)
         {
-            if (DistanceToVirWall(roboticWall, phyW1) < DistanceToVirWall(roboticWall, phyW2))
+            if (DistanceToVirWall(roboticWall, point1) < DistanceToVirWall(roboticWall, point2))
                 return -1;
             else
                 return 1;
         });
-
+        /* sort the standby points list by the distance to matched virtual walls, from large to small */
+        /*standby_list_available.Sort(delegate (GameObject point1, GameObject point2)
+        {
+            if (TotalDisToRWall(point1) > TotalDisToRWall(point2))
+                return -1;
+            else
+                return 1;
+        });
+        foreach (GameObject standbyP in standby_list_available)
+        {
+            float totalDis = TotalDisToRWall(standbyP);
+            print($"{standbyP.name} summary dis = {totalDis}");
+        }*/
         //sort with the total distance from other robotic wall in wall state to standby points, the standby point with largest total distance shall be picked
         /*standby_list_available.Sort(delegate (GameObject stand1, GameObject stand2)
         {
@@ -83,10 +95,11 @@ public class Standby_Requester : MonoBehaviour {
                 }
             }
         }*/
+        /* from the top 2 points, pick one which is closer to the center of the room as the target standby point. */
         GameObject target;
-        //if (standby_list_available.Count < 2)
+        if (standby_list_available.Count < 2)
             target = standby_list_available[0];
-        /*else
+        else
         {
             if (DistanceToVirWall(standby_list_available[0], center) < DistanceToVirWall(standby_list_available[1], center))
                 target = standby_list_available[0];
@@ -95,11 +108,43 @@ public class Standby_Requester : MonoBehaviour {
                 print("better stand-by point");
                 target = standby_list_available[1];
             }
-        }*/
-        //print("allocate_standbypoint");
+        }
+        //print("allocate_standbypoint");*/
+        //target = standby_list_available[0];
         standby_list_available.Remove(target);
         return target;
         
+    }
+
+    /* re-allocate the standy points at real time */
+    public GameObject Allocate_StandbyPoint(GameObject current_standbyPoint,int a)
+    {
+        List<GameObject> temp_standby_list = new List<GameObject>();
+        foreach (GameObject standbyPoint in standby_list_available)
+            temp_standby_list.Add(standbyPoint);
+        temp_standby_list.Add(current_standbyPoint);
+        temp_standby_list.Sort(delegate (GameObject point1, GameObject point2)
+        {
+            if (TotalDisToRWall(point1) > TotalDisToRWall(point2))
+                return -1;
+            else
+                return 1;
+        });
+        /*foreach(GameObject standbyP in temp_standby_list)
+        {
+            float totalDis = TotalDisToRWall(standbyP);
+            print($"{standbyP.name} summary dis = {totalDis}");
+        }*/
+
+        GameObject target = temp_standby_list[0];
+        if (target == current_standbyPoint)
+            return target;
+        else
+        {
+            standby_list_available.Remove(target);
+            standby_list_available.Add(current_standbyPoint);
+            return target;
+        }
     }
 
     //release the standby point and move it into the available list
@@ -111,21 +156,63 @@ public class Standby_Requester : MonoBehaviour {
             standby_list_available.Add(standbyPoint);
     }
 
+
+
     //return
-    /*private float TotalDisToRWall(GameObject standbyPoint,GameObject rWall)
+    private float TotalDisToRWall(GameObject standbyPoint)
     {
         float totalDis = 0;
-        foreach (Animator states in statesController.GetStatesList())
+        foreach (Animator states in rWall_states_list)
         {
-            if (states.GetCurrentAnimatorStateInfo(0).IsName("Wall") || states.gameObject == rWall)
+            if (states.GetCurrentAnimatorStateInfo(0).IsName("Wall"))
             {
-                Vector3 vec = states.transform.position - standbyPoint.transform.position;
-                vec.y = 0;
-                totalDis += vec.magnitude;
+                GameObject vwall = states.GetBehaviour<Wall_State>().GetWall();
+                float dis_point2wall = dis_Point2VWall(standbyPoint.transform.position,vwall);
+                totalDis += dis_point2wall;
             }
         }
         return totalDis;
-    }*/
+    }
+
+    //calculate the distance from a point to a virtual wall by raycast,return the result
+    private float dis_Point2VWall(Vector3 point,GameObject vWall)
+    {
+        RaycastHit hit;
+        LayerMask mask = 1 << 8;
+        /* judge which side of the virtual wall the point is at */
+        /*Vector3 ray_dir;
+        Vector3 point2Wall = point - vWall.transform.position;
+        point2Wall.y = 0;
+        if (Vector3.Dot(point2Wall, vWall.transform.forward) > 0)
+        {
+            ray_dir = -vWall.transform.forward;
+        }
+        else
+            ray_dir = vWall.transform.forward;
+        Color color = Color.red;
+        Debug.DrawRay(point, ray_dir.normalized * 2, color);
+        if (Physics.Raycast(point, ray_dir, out hit, 10f,mask))
+        {
+            if (hit.collider.gameObject == vWall)
+            {
+                print("******************** hit *******************");
+                return hit.distance;
+            }
+            else
+                return hit.distance + 4f;
+            
+        }
+        else
+            return 0;*/
+        Vector3 a = vWall.transform.position - point;
+        a.y = 0;
+        Vector3 b = vWall.transform.right;
+        float cosTheta = (Vector3.Dot(a, b)) / (a.magnitude * b.magnitude);
+        float sinTheta = Mathf.Sqrt(1 - cosTheta * cosTheta);
+        float c = a.magnitude * sinTheta;
+        return c;
+        
+    }
 
     private float DistanceToVirWall(GameObject virWall, GameObject phyWall)
     {
@@ -146,6 +233,8 @@ public class Standby_Requester : MonoBehaviour {
             return true;
 
     }
+
+
 
     //Judge which side of the user the obj is on, and the direction judged by the direction object
     //if it's on positive side, return true;
