@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6297554772162167639}
   - component: {fileID: 6297554772162167641}
-  - component: {fileID: 6297554772162167640}
   m_Layer: 0
   m_Name: StatesController
   m_TagString: Untagged
@@ -44,19 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb8f0b9affa9bcb418466dca53d7652c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSpeed: 0.5
+  singleMatchCheck: 1
   r_wall1: {fileID: 0}
   r_wall2: {fileID: 0}
   r_wall3: {fileID: 0}
   r_wall4: {fileID: 0}
---- !u!114 &6297554772162167640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6297554772162167642}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db994aa7eb53f04ea7037182aedb047, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

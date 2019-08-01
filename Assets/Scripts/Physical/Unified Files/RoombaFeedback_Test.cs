@@ -49,7 +49,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
     public double p_2loop;
     public double d_2loop;
 
-    private int outputMaxAmount = 1000;
+    private int outputMaxAmount = 800;
 
     private double angle_lastframe;
     private double angle_rotationlastframe;
@@ -77,6 +77,10 @@ public class RoombaFeedback_Test : MonoBehaviour {
     private double spd_ref;
     private double angleSpd_ref;
 
+    /* visualization for 2 points */
+    private Vector3 visual_1 = new Vector3();
+    private Vector3 visual_2 = new Vector3();
+
     // Use this for initialization
     void Start () {
         c2 = GameObject.Find("Roomba").GetComponent<RoombaControllerScript>();
@@ -85,7 +89,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         start1 = false;
         //target = new Vector3(target1.transform.position.x, 0, target1.transform.position.z);
         //target_Roomba = FindRoomba(target, Vector3.forward,roomba_distance);
-        rend = wall.GetComponent<Renderer>();
+        wall = this.gameObject;
         s_serial = new SerialPort(portName, portSpeed);
         try
         { s_serial.Open(); }
@@ -93,11 +97,22 @@ public class RoombaFeedback_Test : MonoBehaviour {
         {
 
         }
+        
 
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void OnDrawGizmos()
+    {
+        // Draw a semitransparent blue cube at the transforms position
+
+            /*Gizmos.color = new Color(1, 0, 0, 0.5f);
+            Gizmos.DrawCube(visual_1, new Vector3(0.1f, 0.1f, 0.1f));
+            Gizmos.color = new Color(0, 1, 0, 0.5f);
+            Gizmos.DrawSphere(visual_2, 0.1f);*/
+    }
+
+    // Update is called once per frame
+    void Update () {
         //send the location data to oscillscope
         double pos_x = wall.transform.position.x * 100;
         double pos_y = wall.transform.position.y * 100;
@@ -243,7 +258,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         //amplitude limiting
         velocity_R = ampLimit(velocity_R);
         velocity_L = ampLimit(velocity_L);
-        if (angle >= -2 && angle <= 2)
+        if (angle >= -5 && angle <= 5)
         {
             finished = true;
             c2.Stop(wallnum);
@@ -271,8 +286,8 @@ public class RoombaFeedback_Test : MonoBehaviour {
         byte[] data3 = new byte[10] ;
 
         bool finished = true;
-        double distance;
-        double angle;
+        double distance = 0;
+        double angle = 0;
         int velocity_R;
         int velocity_L;
         double distance_input;
@@ -280,20 +295,28 @@ public class RoombaFeedback_Test : MonoBehaviour {
         double p_ang ;//controlling variable of angle
         double p_dis = p2;//controlling variable of distance
         Vector3 walltoTarget;//the vector from wall to the target
-        double angleDirection;// the angle between walltoTarget and the forward direction of the wall
+        double angleDirection = 0;// the angle between walltoTarget and the forward direction of the wall
         int movingdirection;
+        wall = this.gameObject;
 
-        Vector3 target = new Vector3(targetposition.x, 0, targetposition.z);
-        Vector3 wallposition = new Vector3(wall.transform.position.x, 0, wall.transform.position.z);
-        Vector3 roombaposition = FindRoomba(wallposition, wall.transform.forward);
-        walltoTarget = target - roombaposition;
-        angleDirection = AngleSigned(walltoTarget, wall.transform.right, Vector3.up);
-        if (angleDirection > -90 && angleDirection < 90)
-            angle = AngleSigned(wall.transform.right, walltoTarget, Vector3.up);
-        else
-            angle = AngleSigned(-wall.transform.right, walltoTarget, Vector3.up);
-        //print("angle =" + angle);
-        distance = Vector3.Distance(roombaposition, target);
+        //Loom.QueueOnMainThread(() =>
+        //{
+            Vector3 target = new Vector3(targetposition.x, 0, targetposition.z);
+            Vector3 wallposition = new Vector3(wall.transform.position.x, 0, wall.transform.position.z);
+            Vector3 roombaposition = wallposition; /*FindRoomba(wallposition, wall.transform.forward)*/;
+            walltoTarget = target - this.gameObject.transform.position;
+        walltoTarget.y = 0;
+            angleDirection = AngleSigned(walltoTarget, wall.transform.right, Vector3.up);
+            if (angleDirection > -90 && angleDirection < 90)
+                angle = AngleSigned(wall.transform.right, walltoTarget, Vector3.up);
+            else
+                angle = AngleSigned(-wall.transform.right, walltoTarget, Vector3.up);
+            //print("angle =" + angle);
+            distance = walltoTarget.magnitude;
+        visual_1 = roombaposition;
+        visual_2 = target;
+        //print($"distance = {distance}");
+        //});
         //print("roombaposition1 = " + roombaposition + " targetroomba2 = " + target);
         //print("roombaposition = " + roombaposition);
         //print("distance ="+ distance);
@@ -342,7 +365,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
         }*/
 
         distance_input = ampLimit((int)distance_input);
-        angle_input = ampLimit((int)angle_input);
+        angle_input = (int)angle_input;
         velocity_R = (int)(distance_input - angle_input);
         velocity_L = (int)(distance_input + angle_input);
 
@@ -579,7 +602,7 @@ public class RoombaFeedback_Test : MonoBehaviour {
 
     public Vector3 FindRoomba(Vector3 wallposition, Vector3 walldirection)
     {
-        Vector2 directionVe2 = IgnoreYAxisa(-walldirection);
+        /*Vector2 directionVe2 = IgnoreYAxisa(-walldirection);
         Vector2 wallVe2 = IgnoreYAxisa(wallposition);
         double a = directionVe2.x;
         double b = directionVe2.y;
@@ -587,7 +610,11 @@ public class RoombaFeedback_Test : MonoBehaviour {
         double x2 = b * roomba_distance / Math.Sqrt(a * a + b * b) + wallVe2.y;
         //GameObject roomba =  Instantiate(roomba_reference,new Vector3(x1, 0, x2),transform.rotation);//show the position of the roomba
         //roomba.transform.SetParent(wall1.transform, true);
-        return new Vector3((float)x1, 0,(float) x2);
+        return new Vector3((float)x1, 0,(float) x2);*/
+        wallposition.y = 0;
+        walldirection.y = 0;
+        Vector3 roombaPos = wallposition - walldirection.normalized * (float)roomba_distance;
+        return roombaPos;
 
     }
 

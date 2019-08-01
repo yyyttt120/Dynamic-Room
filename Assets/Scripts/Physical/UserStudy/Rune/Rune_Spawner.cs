@@ -11,10 +11,13 @@ public class Rune_Spawner : MonoBehaviour
     public GameObject lights;
     private int runeCount;
     private int lastWallID = 0;
+    private int[] IDs;
+    private int ID_index = 0;
     // Start is called before the first frame update
     void Start()
     {
         lights.SetActive(false);
+        IDs = new int[5] { 3, 0, 1, 0, 1 };
     }
 
     // Update is called once per frame
@@ -38,12 +41,15 @@ public class Rune_Spawner : MonoBehaviour
 
     private void SpawnRune()
     {
-        int wallID = Random.Range(0, 3);
+        /*int wallID = Random.Range(0, 3);
         while (wallID == lastWallID)
         {
             wallID = Random.Range(0, 3);
         }
-        lastWallID = wallID;
+        lastWallID = wallID;*/
+
+        int wallID = IDs[ID_index];
+        ID_index++;
         float pos_x = Random.Range(-0.3f, 0.3f);
         float pos_y = Random.Range(-0.3f, 0.3f);
         GameObject wall = VWalls[wallID];
@@ -54,7 +60,7 @@ public class Rune_Spawner : MonoBehaviour
         try
         {
             currentRune.transform.parent = VWalls[wallID].transform.GetChild(1);
-            currentRune.transform.localPosition = new Vector3(currentRune.transform.localPosition.x, currentRune.transform.localPosition.y, 0.6665f);
+            currentRune.transform.localPosition = new Vector3(currentRune.transform.localPosition.x, currentRune.transform.localPosition.y, 0.6f);
         }
         catch (System.Exception e)
         {

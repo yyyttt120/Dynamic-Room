@@ -25,7 +25,7 @@ public class RandomSwitch : MonoBehaviour
         if(counter > 100)
         {
             counter = 0;
-            if (touchCount < 5)
+            if (touchCount < 15)
             {
                 buttonTouched.Play();
                 Blink();

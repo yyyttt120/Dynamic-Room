@@ -9,6 +9,8 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
     public float accele;
     public float angleSpeed;
 
+    private Vector3 target_pos;
+
     bool step1on = false;
     bool step2on = false;
     bool step3on = false;
@@ -20,7 +22,20 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
     // Update is called once per frame
     void Update()
     {
+        
+    }
 
+    private void OnDrawGizmos()
+    {
+        // Draw a semitransparent blue cube at the transforms position
+        {
+            Gizmos.color = new Color(1, 0, 0, 0.5f);
+            Gizmos.DrawCube(target_pos, new Vector3(0.1f, 0.1f, 0.1f));
+            /*Gizmos.color = new Color(0, 1, 0, 0.5f);
+            Gizmos.DrawSphere(simulatedPos_roomba, 0.1f);
+            Gizmos.color = new Color(0, 0, 1, 0.5f);
+            Gizmos.DrawSphere(targetPos_roomba, 0.1f);*/
+        }
     }
 
     public override bool Translation_LR(Vector3 targetposition, GameObject wall, int wallnum, bool on, double p1, double p2)
@@ -31,7 +46,9 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
         double angle;
         double distance;
 
-        roombaPos = FindRoomba(wall.transform.position,wall.transform.forward);
+        target_pos = targetposition;
+        roombaPos = wall.transform.position; /*FindRoomba(wall.transform.position,wall.transform.forward)*/;
+        roombaPos.y = 0;
         angle = AngleSigned(wall.transform.right, targetposition - roombaPos, Vector3.up);
         if (angle >= -90 && angle <= 90)
             moveDirection = 1;
@@ -92,7 +109,7 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
             //print("step1 =" + step1on);
             if (!step1on)
             {
-                print("translating");
+                //print("translating");
                 step2on = true;
                 gameObject.transform.Translate(gameObject.transform.right * moveDirection * Time.deltaTime * speed,Space.World);
             }
@@ -130,3 +147,4 @@ public class RoombaFeedback_Simulator : RoombaFeedback_Test
         return !rotationOn;
     }
 }
+

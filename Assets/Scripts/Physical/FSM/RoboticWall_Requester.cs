@@ -106,17 +106,17 @@ public class RoboticWall_Requester : MonoBehaviour
             //check if this wall isn't covered by other walls
             //Slider_Controller slider_Con = gameObject.GetComponent<Slider_Controller>();
             //userClose = true;
-            print($"{this.name} matched = {vWall.matched}");
+            //print($"{this.name} matched = {vWall.matched}");
             if (gameObject.transform.GetChild(0).gameObject.activeSelf && vWall.GetMatchRWall() == null && !vWall.matched)
             {
-                print($"{gameObject.name} ready allocate");
+                //print($"{gameObject.name} ready allocate");
                 //userClose = true;
                 //print("wall should ready " + gameObject.name);
                 if(timer >= 0)
                     timer += Time.deltaTime;
                 states = null;
                 //if (waitAllocate)
-                if(timer > 0.5f)
+                if(timer > 1f)
                 {
                     //waitAllocate = false;
                     states = Allocate_wall(gameObject);

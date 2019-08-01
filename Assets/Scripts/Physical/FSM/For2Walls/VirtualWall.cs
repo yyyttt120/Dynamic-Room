@@ -11,8 +11,9 @@ public class VirtualWall : MonoBehaviour
     private int layMask = (1 << 8);
     [HideInInspector] public bool matched;// true, when it's matched by a robotic wall
     public bool touching;//be true, when the virtual wall is correctly matched and is touching by user
-    public Interactable_Points[] IPs;
+    [HideInInspector] public Interactable_Points[] IPs;
     private Vector3 originalPos;
+    public bool Calibrate_Enable = false;
 
     //for evaluation data
     private GameObject evalu_Data_Writer;
@@ -52,7 +53,8 @@ public class VirtualWall : MonoBehaviour
         if (matchRWall == null)
         {
             touching = false;
-            print($"{gameObject.name} release wall");
+            timerStart = false;
+            //print($"{gameObject.name} release wall");
             if (matchRWall_record != null)
             {
                 matchRWall_record.GetBehaviour<Wall_State>().SetReadyRelease(true);
@@ -65,7 +67,7 @@ public class VirtualWall : MonoBehaviour
         else
         {
             matched = true;
-            print($"{gameObject.name} match {matchRWall.name}");
+            //print($"{gameObject.name} match {matchRWall.name}");
             matchRWall_record = matchRWall;
             matchRWall.SetInteger("NearWallCounter", 10);
             matchRWall.GetBehaviour<Wall_State>().SetTargetWall(gameObject);
@@ -89,7 +91,7 @@ public class VirtualWall : MonoBehaviour
     {
         if(other.tag.CompareTo("Hand") == 0)
         {
-            print("timer start");
+            //print("timer start");
             timerStart = true;
             timer = 0;
             //userSpd = GetUserSpeed();
@@ -129,7 +131,8 @@ public class VirtualWall : MonoBehaviour
                     touching = true;
                 }
                 timerStart = false;
-                calibrateVWall();
+                /*if(Calibrate_Enable)
+                    calibrateVWall();*/
             }
         }
     }
@@ -162,6 +165,7 @@ public class VirtualWall : MonoBehaviour
 
     public void SetMatchRWall(Animator rWall)
     {
+        //print($"************* {this.name} set match wall {rWall.name}");
         this.matchRWall = rWall;
     }
 
@@ -175,7 +179,7 @@ public class VirtualWall : MonoBehaviour
         string info;
         Vector3 nullvec = new Vector3(0,0,0);
         string nulv = VectortoString(nullvec);
-        switch (IPs.Length)
+        switch (0)
         {
             case 0:
                 info = VectortoString(transform.position) + " " + VectortoString(transform.forward) + " " + nulv + " " + nulv;
@@ -240,7 +244,7 @@ public class VirtualWall : MonoBehaviour
             }
             catch(System.NullReferenceException e1)
             {
-                print($"{this.name} have no interactable points");
+                //print($"{this.name} have no interactable points");
             }
         }
         else

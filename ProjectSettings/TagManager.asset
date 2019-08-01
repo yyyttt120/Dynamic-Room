@@ -16,6 +16,7 @@ TagManager:
   - Door
   - Controller
   - User_Detect_Area
+  - Hero
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - Wall
   - Player
   - Robotic_Wall
-  - 
+  - Detect_area
   - 
   - 
   - 

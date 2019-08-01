@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Detect_Area_forML : MonoBehaviour
 {
-    List<GameObject> wallsInAreaList;
+    public GameObject user;
+    private List<GameObject> wallsInAreaList;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +16,8 @@ public class Detect_Area_forML : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.position = new Vector3(user.transform.position.x, 0f, user.transform.position.z);
+        transform.forward = new Vector3(user.transform.forward.x, 0f, user.transform.forward.z);
     }
     private void OnTriggerStay(Collider other)
     {
@@ -22,7 +25,7 @@ public class Detect_Area_forML : MonoBehaviour
         {
             if (other.gameObject.transform.GetChild(0).gameObject.activeSelf)
             {
-                print($"*************{other.name} detected");
+                //print($"*************{other.name} detected");
                 AddWall(other.gameObject);
             }
             else

@@ -49,7 +49,7 @@ public class Standby_State : StateMachineBehaviour {
         if(timer > 1f)
         {
             if(standby_requester.currentAlgorithm == Standby_Requester.algorithm.detection)
-                standby_point = standby_requester.Allocate_StandbyPoint(standby_point,1);
+                standby_point = standby_requester.Allocate_StandbyPoint(standby_point,animator.gameObject);
             timer = 0;
         }
         /*if(reallocate_standbyPoint.ThreadState == ThreadState.Unstarted)
@@ -64,10 +64,10 @@ public class Standby_State : StateMachineBehaviour {
         //reallocate_standbyPoint.Suspend();
     }
 
-    private void re_Allocate_StandbyPoint()
+    /*private void re_Allocate_StandbyPoint()
     {
         standby_point = standby_requester.Allocate_StandbyPoint(standby_point, 1);
-    }
+    }*/
 
 
 

@@ -9,7 +9,7 @@ public class Wall_To_Target_ : MonoBehaviour {
 
     public Wall_Mov_Dir robotic_wall_dir = Wall_Mov_Dir.Left_Right;
 
-    public GameObject wall;
+    private GameObject wall;
     //***** for real controller (not for simulator)*****
     public int wallnum;
     public int p1 = 10;//parameter for translation(angle)
@@ -33,6 +33,7 @@ public class Wall_To_Target_ : MonoBehaviour {
     void Start () {
         last_target_pos = target.transform.position;
         record_in_turn = in_turn;
+        wall = this.gameObject;
         //avoidance = this.GetComponent<Obstacle_Avoid>();
     }
 
@@ -83,9 +84,9 @@ public class Wall_To_Target_ : MonoBehaviour {
                         //Debug.DrawRay(avoidTarget, Vector3.forward * 1f, color,0.1f,true);
                         //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
                         if (robotic_wall_dir == Wall_Mov_Dir.Left_Right)
-                            start_translate = !controll.Translation_LR(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                            start_translate = !controll.Translation_LR(avoidTarget, wall, wallnum, true, p1, p2);
                         else
-                            start_translate = !controll.Translation_FB(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                            start_translate = !controll.Translation_FB(avoidTarget, wall, wallnum, true, p1, p2);
                         //print("translate2:" + start_translate);
                     }
                 }

@@ -39,7 +39,7 @@ public class NetMqPublisher
                 {
                     client.SendFrame(response);
                     string m2 = client.ReceiveFrameString();
-                    UnityEngine.Debug.Log(m2);
+                    //UnityEngine.Debug.Log(m2);
                     result = m2;
                 }
 

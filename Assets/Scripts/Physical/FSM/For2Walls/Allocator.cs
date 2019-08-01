@@ -9,16 +9,17 @@ public class Allocator : MonoBehaviour
     public VirtualWall[] vWalls;
     public ServerObject dataRequester;
     public Detect_Area_forML detectBlock;
-    private GameObject standbyPoints;
+    protected GameObject standbyPoints;
     private GameObject center;
-    GameObject user;
+    protected GameObject user;
 
-    private List<GameObject> standbyList;
-    private int lastVirWallNum;
+    protected VirtualWall[] vWalls_all;//save all the virtual walls in this scene into this scene
+    protected List<GameObject> standbyList;
+    protected int lastVirWallNum = 0;
     private int lastFrameTarget;
     private int rWallNum;//the robotic wall which is going to match the target in this frame
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         user = GameObject.Find("Camera (eye)");
         lastFrameTarget = 0;
@@ -31,31 +32,41 @@ public class Allocator : MonoBehaviour
             standbyList.Add(standbyPoints.transform.GetChild(i).gameObject);
         }
         center = GameObject.Find("Center");
+        if (vWalls == null)
+            vWalls = new VirtualWall[4];
+
+        GameObject[] obj_vwalls = GameObject.FindGameObjectsWithTag("Wall");
+        vWalls_all = new VirtualWall[obj_vwalls.Length];
+        for (int i = 0; i < obj_vwalls.Length; i++)
+            vWalls_all[i] = obj_vwalls[i].GetComponent<VirtualWall>();
+            
+        
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        UpdateCurrentVWalls();
         int targetNum = Int32.Parse(dataRequester.result);
         print("target number ="+ targetNum);
         rWalls[0].wallToTarget_controller.Robot_Move_Switch(true);
-       
+
         //change the robotic wall, once the target was changed
         /*if (targetNum != 0  && targetNum != lastFrameTarget)
         {
             SwitchRWall();
         }
         lastFrameTarget = targetNum;*/
-
         if (targetNum != 0)
         //rWalls[0].wallToTarget_controller.Set_Target(vWalls[targetNum-1].gameObject.transform.GetChild(0).gameObject);
         {
-            foreach(VirtualWall vwall in vWalls)
+            foreach(VirtualWall vwall in vWalls_all)
             {
-                vwall.SetMatchRWall(null);
+                vwall.SetMatchRWall(null);              
             }
             //allocate a robotic wall for target virtual wall
             int targetRWall = AllocateRWall(vWalls[targetNum - 1].gameObject);
+            print($"ml target wall = {vWalls[targetNum - 1].name}");
             vWalls[targetNum - 1].SetMatchRWall(rWalls[targetRWall].stateController);
             //rWalls[targetRWall].stateController.GetBehaviour<Wall_State>().SetTargetWall(vWalls[targetNum - 1].gameObject);
             //set virtual target for another robotic wall
@@ -80,7 +91,29 @@ public class Allocator : MonoBehaviour
         /*if(targetNum != 0)
             lastVirWallNum = targetNum;*/
     }
-    private GameObject FindStandbyPoint(Robotic_Wall rwall)
+
+    /*  update the 4 walls and boundary of the block for ML classifier      */
+    protected void UpdateCurrentVWalls()
+    {
+        try
+        {
+            ML_Block block = GetComponent<Find4Walls>().currentBlock;
+            if (GetComponent<Find4Walls>().blockChanged || vWalls[0] == null)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    vWalls[i] = block.walls[i].GetComponent<VirtualWall>();
+                }
+                //boundary = $"{block.min_x} {block.max_x} {block.min_z} {block.max_z}";
+            }
+        }
+        catch (System.Exception e)
+        {
+            print(e.Message);
+        }
+    }
+
+    protected GameObject FindStandbyPoint(Robotic_Wall rwall)
     {
         standbyList.Sort(delegate (GameObject point1, GameObject point2) {
             Vector3 vec1 = point1.transform.position - center.transform.position;
@@ -100,7 +133,7 @@ public class Allocator : MonoBehaviour
     private GameObject FindOtherTarget(int MLtarget)
     {
         List<GameObject> WallsInArea = detectBlock.GetWallInAreaList();
-        print($"amount of detected walls = {WallsInArea.Count}");
+        //print($"amount of detected walls = {WallsInArea.Count}");
         foreach(GameObject wall in WallsInArea)
         {
             if (wall != vWalls[MLtarget - 1].gameObject)
@@ -138,7 +171,7 @@ public class Allocator : MonoBehaviour
             return 0;
     }
 
-    private float DistanceToVirWall(GameObject virWall, GameObject phyWall)
+    protected float DistanceToVirWall(GameObject virWall, GameObject phyWall)
     {
         Vector3 vec = virWall.transform.position - phyWall.transform.position;
         vec = new Vector3(vec.x, 0, vec.z);

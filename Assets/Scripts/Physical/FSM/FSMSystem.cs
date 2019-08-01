@@ -8,16 +8,15 @@ public class FSMSystem : MonoBehaviour {
     private List<Animator> statesList = new List<Animator>();
     private float timer;
     private float timeStep = 0.04f;//time step in simulatin for RVO
-    private GameObject[] virtualWalls;
-    private VirtualWall[] vwalls;
+    private VirtualWall[] vwalls;//all the virtual walls in this scene
     public float maxSpeed = 0.5f;//max speed of robotic walls
+    public bool singleMatchCheck = true;
 
     public GameObject r_wall1;
     public GameObject r_wall2;
     public GameObject r_wall3;
     public GameObject r_wall4;
 
-    //private GameObject wall;//virtual wall wait be allocated a robotic wall
                             // Use this for initialization
 
     private void Awake()
@@ -29,7 +28,7 @@ public class FSMSystem : MonoBehaviour {
         timer = 0;
         //default set for RVO agent
         Simulator.Instance.setTimeStep(timeStep);
-        Simulator.Instance.setAgentDefaults(2.0f,4,5.0f,5.0f,0.5f,maxSpeed,new Vector2(0.0f,0.0f));
+        Simulator.Instance.setAgentDefaults(2.0f,4,5.0f,5.0f,0.45f,maxSpeed,new Vector2(0.0f,0.0f));
         Simulator.Instance.addAgent(new Vector2(0, 0));
         //prepare the robotic walls
         if (r_wall1.activeSelf)
@@ -41,8 +40,8 @@ public class FSMSystem : MonoBehaviour {
         if (r_wall4.activeSelf)
             addRwall(r_wall4);
 
-        /* find all the virtual walls with tag */
-        virtualWalls = GameObject.FindGameObjectsWithTag("Wall");
+        /* find all the virtual walls with tag "Wall" */
+        GameObject[] virtualWalls = GameObject.FindGameObjectsWithTag("Wall");
         vwalls = new VirtualWall[virtualWalls.Length];
         for(int i = 0;i< virtualWalls.Length; i++)
         {
@@ -74,15 +73,18 @@ public class FSMSystem : MonoBehaviour {
             timer = 0;
 
             /*check if two virtual walls are asigned a same robotic wall*/
-            for (int i = 0; i < vwalls.Length - 1; i++)
+            if (singleMatchCheck)
             {
-                for (int j = i + 1; j < vwalls.Length; j++)
+                for (int i = 0; i < vwalls.Length - 1; i++)
                 {
-                    if (vwalls[i].GetMatchRWall() == null || vwalls[j].GetMatchRWall() == null)
-                        continue;
-                    else if (vwalls[i].GetMatchRWall() == vwalls[j].GetMatchRWall())
-                        vwalls[j].SetMatchRWall(null);
+                    for (int j = i + 1; j < vwalls.Length; j++)
+                    {
+                        if (vwalls[i].GetMatchRWall() == null || vwalls[j].GetMatchRWall() == null)
+                            continue;
+                        else if (vwalls[i].GetMatchRWall() == vwalls[j].GetMatchRWall())
+                            vwalls[j].SetMatchRWall(null);
 
+                    }
                 }
             }
         }

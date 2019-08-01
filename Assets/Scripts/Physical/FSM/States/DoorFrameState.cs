@@ -9,15 +9,13 @@ public class DoorFrameState : StateMachineBehaviour {
     private Robotic_Wall roboticWall;
     //private Wall_Requester wall_requester;
     private GameObject doorWall;//the door where the wall settle
+    private SteamVR_TrackedObject vive_controller;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
         roboticWall=animator.gameObject.GetComponent<Robotic_Wall>();
-        //wall_requester = GameObject.Find("User_Encounter_Area").GetComponent<Wall_Requester>();
-        //user = GameObject.Find("Camera (eye)").gameObject;
-        //roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
-        //doorWall = GameObject.Find("DoorWall");
         Debug.Log("doorwall =" + doorWall.name);
         //wall_requester.SetWallSolved(doorWall);
+        vive_controller = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
     }
 
 	// OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -26,37 +24,42 @@ public class DoorFrameState : StateMachineBehaviour {
             slider.transform.position = new Vector3(user.transform.position.x, slider.transform.position.y, slider.transform.position.z);
         else
             slider.transform.position = new Vector3(slider.transform.position.x, slider.transform.position.y, user.transform.position.z);*/
-        Debug.Log("doorwall =" + doorWall.name);
+        //Debug.Log("doorwall =" + doorWall.name);
         //ensure this robotic wall is in solved list
         //wall_requester.SetWallSolved(doorWall);
         //disable obstacle avoidance module
         //animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = false;
+        Debug.Log($"{frame.name} is door frame");
         roboticWall.wallToTarget_controller.Robot_Move_Switch(true);
-        roboticWall.wallToTarget_controller.Set_Target(frame);
-        if (roboticWall.wallToTarget_controller.Get_State())
+        doorWall.GetComponent<VirtualWall>().SetMatchRWall(animator);
+        doorWall.transform.GetChild(0).position = frame.transform.position;
+        /*if (roboticWall.wallToTarget_controller.Get_State())
         {
             animator.SetBool("DoorInitiated", true);
             
-        }
+        }*/
         Debug.Log("door =" + frame.transform.GetChild(0).gameObject.name);
 
-        //if the slider of door wall inactivated, transform into standby state
-        if (!doorWall.transform.GetChild(0).gameObject.activeSelf)
+        SteamVR_Controller.Device right = SteamVR_Controller.Input((int)vive_controller.index);
+        if(right.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
             animator.SetBool("SliderEnterDoor", false);
+        //if the slider of door wall inactivated, transform into standby state
+        /*if (!doorWall.transform.GetChild(0).gameObject.activeSelf)
+            animator.SetBool("SliderEnterDoor", false);*/
 
         //send the paramenter to next state
-        animator.GetBehaviour<DoorState>().SetDoor(frame.transform.GetChild(0).gameObject);
+        //animator.GetBehaviour<DoorState>().SetDoor(frame.transform.GetChild(0).gameObject);
         //animator.GetBehaviour<DoorState>().SetSlider(slider);
     }
 
 	// OnStateExit is called when a transition ends and the state machine finishes evaluating this state
 	override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-        roboticWall.wallToTarget_controller.Robot_Move_Switch(false);
+        //roboticWall.wallToTarget_controller.Robot_Move_Switch(false);
         //reset obstacle avoidance module
         //animator.gameObject.GetComponent<Obstacle_Avoid>().enabled = true;
         //release the wall the door settle in
         //wall_requester.ReleaseWall(animator.GetBehaviour<Wall_State>().GetWall());
-        //animator.GetBehaviour<DoorState>().SetDoor(frame.transform.GetChild(0).gameObject);
+        //animGetBehaviator.our<DoorState>().SetDoor(frame.transform.GetChild(0).gameObject);
     }
 
 	// OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here

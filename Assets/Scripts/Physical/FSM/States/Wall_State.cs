@@ -54,7 +54,7 @@ public class Wall_State : StateMachineBehaviour {
         {
             if (readyToRelease || !slider.activeSelf || slider == null)
             {
-                int counter = animator.GetInteger("NearWallCounter") - 1;
+                int counter = animator.GetInteger("NearWallCounter") - 2;
                 if (counter < -51)
                 {
                     counter = -51;

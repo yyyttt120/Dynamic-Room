@@ -9,7 +9,7 @@ public class SpeedSupervisor : MonoBehaviour
     private GameObject nautyButton;
     private int count_frame = 0;
     private int count_silent_frame = 0;//count the frame which user keep statinary
-    private float user_spd_average = 0;
+    public float user_spd_average = 0;
     private float user_spd_ave_3s = 0;
     private float spd_sum = 0;
     private bool flag = false;//the flag to record have we played the audio clips
@@ -29,7 +29,7 @@ public class SpeedSupervisor : MonoBehaviour
         Vector3 vec = device.velocity;
         vec.y = 0;
         float spd = vec.magnitude;
-        if (/*timer >= 3f*/count_frame >= 200)
+        if (/*timer >= 3f*/count_frame >= 100)
         {
             
             user_spd_average = spd_sum / count_frame;
@@ -52,7 +52,7 @@ public class SpeedSupervisor : MonoBehaviour
             else
                 flag = false;
                 
-            user_spd_average = 0;
+            //user_spd_average = 0;
             count_frame = 0;
             count_silent_frame = 0;
             spd_sum = 0;

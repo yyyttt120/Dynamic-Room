@@ -4,6 +4,7 @@ using UnityEngine;
 using Valve.VR;
 using System.Text;
 
+// Match the tracker by its' serial ID
 public class FindRightTracker : MonoBehaviour
 {
     private SteamVR_TrackedObject[] trackers;

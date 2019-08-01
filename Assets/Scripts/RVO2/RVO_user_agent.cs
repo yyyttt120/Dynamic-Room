@@ -10,6 +10,7 @@ public class RVO_user_agent : RVO_agent
     public SteamVR_TrackedObject user;
     public enum controllType {real,simulation}
     public controllType ControlType;
+    public float userRadius = 0.3f;
 
     private Vector3 pos_lastFrame;
     // Start is called before the first frame update

@@ -29,14 +29,14 @@ public class Door_slide_modified : MonoBehaviour
             //{
             if (door_direction == direction.Right)
             {
-                if (closedposition.x - transform.localPosition.x <= 0.01f && closedposition.x - transform.localPosition.x >= -length + 0.01)
+                if (closedposition.x - transform.localPosition.x <= 0.01f && closedposition.x - transform.localPosition.x >= -length + 0.01 - 1)
                 {
                     transform.localPosition = target;
                     //print("open door");
                 }
                 //set the left boundry of the slide door
-                if (closedposition.x - transform.localPosition.x < -length + 0.01)
-                    transform.localPosition = closedposition + new Vector3(length, 0, 0);
+                /*if (closedposition.x - transform.localPosition.x < -length + 0.01)
+                    transform.localPosition = closedposition + new Vector3(length, 0, 0);*/
                 //set the right boundry of the slide door
                 if (closedposition.x - transform.localPosition.x > 0.01f)
                     transform.localPosition = closedposition;

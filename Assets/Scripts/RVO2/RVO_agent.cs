@@ -10,7 +10,8 @@ public class RVO_agent : MonoBehaviour
     [HideInInspector] public int sid = -1;
     private GameObject _target;//the target of this robotic wall
     private Vector3 posLastFrame;
-    private Vector3 simulatedPos;//the position of this agent in simulation
+    private Vector3 simulatedPos_roomba;//the position of this agent in simulation
+    private Vector3 targetPos_roomba;//the position of the roomba is going to be at while the robotic wall matched
     private float time;
     private float avoidThreshold = 0.20f;//when the robotic wall is closer to target than this value, disable avoidance module
     private RaycastHit hit;
@@ -41,7 +42,7 @@ public class RVO_agent : MonoBehaviour
         flag = new GameObject();
         flag.name = this.name + " flag";
         flag.transform.position = transform.position;
-        simulatedPos = transform.position;
+        simulatedPos_roomba = transform.position;
         maxSpeed = GameObject.Find("StatesController").GetComponent<FSMSystem>().maxSpeed;
     }
 
@@ -50,10 +51,12 @@ public class RVO_agent : MonoBehaviour
         // Draw a semitransparent blue cube at the transforms position
         if (sid > 0)
         {
-            Gizmos.color = new Color(1, 0, 0, 0.5f);
+            /*Gizmos.color = new Color(1, 0, 0, 0.5f);
             Gizmos.DrawCube(flag.transform.position, new Vector3(0.1f, 0.1f, 0.1f));
             Gizmos.color = new Color(0, 1, 0, 0.5f);
-            Gizmos.DrawSphere(simulatedPos, 0.1f);
+            Gizmos.DrawSphere(simulatedPos_roomba, 0.1f);
+            Gizmos.color = new Color(0, 0, 1, 0.5f);
+            Gizmos.DrawSphere(targetPos_roomba, 0.1f);*/
         }
     }
 
@@ -68,7 +71,7 @@ public class RVO_agent : MonoBehaviour
             /*reset the detection range of rvo algorithm for this agent based on whether this robotic wall is close to it's target*/
             closeToTarget = DisableThisModule();
 
-            print($"{this.name} target is {_target.transform.parent.name}:{_target.name}");
+            //print($"{this.name} target is {_target.transform.parent.name}:{_target.name}");
         }
 
 
@@ -91,23 +94,24 @@ public class RVO_agent : MonoBehaviour
             //Simulator.Instance.setAgentPosition(sid, new Vector2(transform.position.x, transform.position.z));
 
             /*set prefered velocity to the the velocity toward the target with max speed*/
-            Vector3 vel_3 = _target.transform.position - simulatedPos;
+            targetPos_roomba = GetComponent<RoombaFeedback_Test>().FindRoomba(_target.transform.position, _target.transform.forward);
+            Vector3 vel_3 = targetPos_roomba - simulatedPos_roomba;
             Vector2 prefVel = new Vector2(vel_3.x, vel_3.z);
             if (RVOMath.abs(prefVel) > 0.2)
                 prefVel = RVOMath.normalize(prefVel) * maxSpeed;
             else
-                prefVel = prefVel * maxSpeed;
+                prefVel = prefVel * maxSpeed*5;
             Simulator.Instance.setAgentPrefVelocity(sid, prefVel);
             /* Perturb a little to avoid deadlocks due to perfect symmetry. */
-            float angle = (float)m_random.NextDouble() * 2.0f * (float)Mathf.PI;
+            /*float angle = (float)m_random.NextDouble() * 2.0f * (float)Mathf.PI;
             float dist = (float)m_random.NextDouble() * 0.0001f;
 
             Simulator.Instance.setAgentPrefVelocity(sid, Simulator.Instance.getAgentPrefVelocity(sid) +
                                                          dist *
-                                                         new Vector2((float)Mathf.Cos(angle), (float)Mathf.Sin(angle)));
+                                                         new Vector2((float)Mathf.Cos(angle), (float)Mathf.Sin(angle)));*/
         }
         /*reset the position of agent in simulation to the location of robotic wall, if it's too far from robotic wall*/
-        Vector3 dis_vec = simulatedPos - transform.position;
+        Vector3 dis_vec = simulatedPos_roomba - transform.position;
         dis_vec.y = 0;
         //print($"distance = {dis_vec.magnitude}");
         if (dis_vec.magnitude > 0.3f)
@@ -119,7 +123,7 @@ public class RVO_agent : MonoBehaviour
         if(dis_vec.magnitude > 1f)
         {
             Simulator.Instance.setAgentPosition(sid, new Vector2(transform.position.x, transform.position.z));
-            simulatedPos = transform.position;
+            simulatedPos_roomba = transform.position;
         }
     }
 
@@ -135,18 +139,18 @@ public class RVO_agent : MonoBehaviour
             Vector2 pos = Simulator.Instance.getAgentPosition(sid);
             if (!flagTooFar)
             {
-                simulatedPos = new Vector3(pos.x(), flag.transform.position.y, pos.y());
+                simulatedPos_roomba = new Vector3(pos.x(), 1f, pos.y());
                 //flag.transform.position = new Vector3(pos.x(), flag.transform.position.y, pos.y());
             }
             else
             {
                 //Simulator.Instance.setAgentPosition(sid, new Vector2(flag.transform.position.x, flag.transform.position.z));
-                Simulator.Instance.setAgentPosition(sid, new Vector2(simulatedPos.x, simulatedPos.z));
+                Simulator.Instance.setAgentPosition(sid, new Vector2(simulatedPos_roomba.x, simulatedPos_roomba.z));
                 
             }
 
             
-            Vector3 dis_toFinalTarget = _target.transform.position - this.transform.position;
+            Vector3 dis_toFinalTarget = targetPos_roomba - this.transform.position;
             dis_toFinalTarget.y = 0;
             /* when the flag is too far from robotic wall, position the flag at in-place */
             /*if (flagTooFar || (velocity_3.magnitude < 0.8 * maxSpeed && dis_toFinalTarget.magnitude > 0.5f))
@@ -163,17 +167,17 @@ public class RVO_agent : MonoBehaviour
                 flag.transform.position = _target.transform.position;*/
             if (dis_toFinalTarget.magnitude > 0.7f)
             {
-                if (!flagTooFar)
-                    flag.transform.position = simulatedPos;
-                else
+                //if (!flagTooFar)
+                    flag.transform.position = simulatedPos_roomba;
+                /*else
                 {
-                    Vector3 vec_temp = (simulatedPos - this.transform.position).normalized;
+                    Vector3 vec_temp = (simulatedPos_roomba - this.transform.position).normalized;
                     vec_temp.y = 0;
                     flag.transform.position = this.transform.position + vec_temp;
-                }
+                }*/
             }
             else
-                flag.transform.position = _target.transform.position;
+                flag.transform.position = targetPos_roomba;
             /*set the position for direction of flag based on target */
             flag.transform.forward = _target.transform.forward;
             /*set the flag as the temporary target of this robotic wall, it will lead this robotic wall to it's final target */

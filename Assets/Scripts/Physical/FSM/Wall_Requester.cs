@@ -11,29 +11,29 @@ public class Wall_Requester : MonoBehaviour {
     //private GameObject releasedWall;
     private Vector3 colliderSize;
     private Vector3 colliderCenter;
-    public SteamVR_TrackedObject user_tracker = null;
-    public FSMSystem roboticwallPool;
+    //public SteamVR_TrackedObject user_tracker = null;
+    //public FSMSystem roboticwallPool;
 
     // Use this for initialization
     void Start() {
         //requestWallList = new List<GameObject>();
-        solvedWallList = new List<GameObject>();
+        //solvedWallList = new List<GameObject>();
         //roboWallList = new List<Animator>();
         //roboWallList = roboticwallPool.GetStatesList();
-        colliderSize = gameObject.GetComponent<BoxCollider>().size;
-        colliderCenter = gameObject.GetComponent<BoxCollider>().center;
+        /*colliderSize = gameObject.GetComponent<BoxCollider>().size;
+        colliderCenter = gameObject.GetComponent<BoxCollider>().center;*/
     }
 
     // Update is called once per frame
     void Update() {
-        string solvedList = "solved list = ";
+        /*string solvedList = "solved list = ";
         foreach(GameObject wall_ in solvedWallList)
         {
             solvedList += wall_.name + " ";
-        }
+        */
         //print(solvedList);
 
-        SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracker.index);
+        //SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracker.index);
 
         this.gameObject.transform.position = user.transform.position;
         this.gameObject.transform.eulerAngles = new Vector3(0, user.transform.eulerAngles.y, 0);

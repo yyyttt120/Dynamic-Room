@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
-public class Wall_To_Target : MonoBehaviour {
+public class Wall_To_Target : MonoBehaviour
+{
     public RoombaFeedback_Test controll;
     public Obstacle_Avoid avoidance;
-    public enum Wall_Mov_Dir { Left_Right, Forward_Back};
+    public enum Wall_Mov_Dir { Left_Right, Forward_Back };
 
     public Wall_Mov_Dir robotic_wall_dir = Wall_Mov_Dir.Left_Right;
 
@@ -15,7 +17,7 @@ public class Wall_To_Target : MonoBehaviour {
     public int p2 = 600;//parameter for translation(distance)
     public int p = 12;//parameter for rotation
     public int d_rotate = 200;//parameter for rotation
-    public enum Side { front,back}
+    public enum Side { front, back }
     public Side matchedSide = Side.front;
 
     //**** turn it false in real demo ***************
@@ -32,29 +34,35 @@ public class Wall_To_Target : MonoBehaviour {
     private GameObject target;
     private Vector3 avoidTarget;//the temporary target when avoiding obstacle 
     private Vector3 last_target_pos;//position of the last target
+    private SteamVR_TrackedObject vive_controller;
     // Use this for initialization
-    void Start () {
-        last_target_pos = target.transform.position;
+    void Start()
+    {
+        wall = this.gameObject;
         record_in_turn = in_turn;
         //avoidance = this.GetComponent<Obstacle_Avoid>();
         anim = gameObject.GetComponent<Animator>();
         time = 0;
+        last_target_pos = target.transform.position;
+        vive_controller = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        /*if (wall == null)
+            wall = this.gameObject;*/
         time += Time.deltaTime;
-        anim = gameObject.GetComponent<Animator>();
         //print(gameObject.name + "target =" + target.name + target.transform.parent.name);
         if (target == null)
         {
-            print(this.name + "no target");
+            //print(this.name + "no target");
             anim.SetBool("NoTarget", true);
         }
         else
         {
             anim.SetBool("NoTarget", false);
-            print($"wallTotarget: {this.name} target is {target.name}");
+            //print($"wallTotarget: {this.name} target is {target.name}");
             //print("avoidance = " + avoidance.gameObject.name);
             //avoidance.SetDetectDirection(target);
             //print("start = " + start);
@@ -86,16 +94,27 @@ public class Wall_To_Target : MonoBehaviour {
             //print("start =" + start);
             if (Input.GetKeyUp(KeyCode.K))
             {
-                switch_button = !switch_button;
+                switch_button = true;
+                print("start PID");
+            }
+            vive_controller = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+            SteamVR_Controller.Device right = SteamVR_Controller.Input((int)vive_controller.index);
+            if (right.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
+            {
+                switch_button = true;
+            }
+            if (Input.GetKeyUp(KeyCode.L))
+            {
+                switch_button = false;
             }
             Color color = Color.blue;
             //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
-            if (time >= 0.05)
+            if (time >= 0.1)
             {
                 time = 0;
                 if (switch_button)
                 {
-                    print("PID On");
+                    //print("PID On");
                     if (start)
                     {
                         //print(this.name + "target =" + target.name);
@@ -105,21 +124,27 @@ public class Wall_To_Target : MonoBehaviour {
                             //Debug.DrawRay(avoidTarget, Vector3.forward * 1f, color,0.1f,true);
                             //Debug.DrawRay(target.transform.position, avoidance.GetAviodanceVector(), color, 0.1f, true);
                             if (robotic_wall_dir == Wall_Mov_Dir.Left_Right)
-                                start_translate = !controll.Translation_LR(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                                //Loom.RunAsync(() =>
+                                //{
+                                    start_translate = !controll.Translation_LR(avoidTarget, wall, wallnum, true, p1, p2);
+                                //});
                             else
-                                start_translate = !controll.Translation_FB(controll.FindRoomba(avoidTarget, target.transform.forward), wall, wallnum, true, p1, p2);
+                                start_translate = !controll.Translation_FB(avoidTarget, wall, wallnum, true, p1, p2);
                             //print("translate2:" + start_translate);
                         }
                     }
                     //**********************************************
-                    print($"start translate = {start_translate}");
+                    //print($"start translate = {start_translate}");
                     if (!start_translate)
                     {
                         //print("rotating");
                         double angle = AngleSigned(wall.transform.forward, target.transform.forward, Vector3.up);
                         if (angle > -90 && angle < 90)
                         {
-                            start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
+                            //Loom.RunAsync(() =>
+                            //{
+                                start_rotate = !controll.Rotation(target.transform.forward, wall, wallnum, p, d_rotate, true);
+                            //});
                             matchedSide = Side.front;
                         }
                         else
@@ -131,6 +156,7 @@ public class Wall_To_Target : MonoBehaviour {
 
                 }
             }
+
         }
     }
 

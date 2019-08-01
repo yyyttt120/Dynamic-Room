@@ -117,12 +117,14 @@ public class Standby_Requester : MonoBehaviour {
     }
 
     /* re-allocate the standy points at real time */
-    public GameObject Allocate_StandbyPoint(GameObject current_standbyPoint,int a)
+    /* the standby point is most far from matched virtual walls should be chosen */
+    public GameObject Allocate_StandbyPoint(GameObject current_standbyPoint,GameObject rWall)
     {
         List<GameObject> temp_standby_list = new List<GameObject>();
         foreach (GameObject standbyPoint in standby_list_available)
             temp_standby_list.Add(standbyPoint);
         temp_standby_list.Add(current_standbyPoint);
+        /* sort the list of standby point according to the totoal distance from matched virtual walls, farther one be ahead */
         temp_standby_list.Sort(delegate (GameObject point1, GameObject point2)
         {
             if (TotalDisToRWall(point1) > TotalDisToRWall(point2))
@@ -136,7 +138,15 @@ public class Standby_Requester : MonoBehaviour {
             print($"{standbyP.name} summary dis = {totalDis}");
         }*/
 
-        GameObject target = temp_standby_list[0];
+        /* if the total distance of top 2 points are close, pick the one close to the robotic wall */
+        float error = Mathf.Abs(TotalDisToRWall(temp_standby_list[0]) - TotalDisToRWall(temp_standby_list[1]));
+        GameObject target;
+        if (error < 0.1f && DistanceToVirWall(temp_standby_list[0],rWall) > DistanceToVirWall(temp_standby_list[1],rWall))
+        {
+            target = temp_standby_list[1];
+        }
+        else
+            target = temp_standby_list[0];
         if (target == current_standbyPoint)
             return target;
         else

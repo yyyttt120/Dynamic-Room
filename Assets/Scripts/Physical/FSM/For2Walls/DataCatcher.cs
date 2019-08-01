@@ -15,6 +15,7 @@ public class DataCatcher : MonoBehaviour
 
     public AudioSource notice;
     private float timer1 = 0;
+    private string boundary = "-7 -2.784 1.88 4.53 ";
     // Start is called before the first frame update
     //FileStream fs;
     float time = 0;
@@ -38,12 +39,14 @@ public class DataCatcher : MonoBehaviour
             wall_r.Set_Robotic_Wall(wall_r.gameObject);
         infoList = new List<string>();
         //*****************************collect data for training**************************
-       /* //第一步访问Txt文件
-        string path = Application.dataPath + "/Data/1.txt";
-        //文件流
-        fs = File.OpenWrite(path);
-        string title = "time user_position.x user_position.y user_position.z user_forward.x user_forward.y user_forward.z user_velocity.x user_velocity.y user_velocity.z user_angle_velocity.x user_angle_velocity.y user_angle_velocity.z wall1_pos.x wall1_pos.y wall1_pos.z wall1_forward.x wall1_forward.y wall1_forward.z wall1_ip1_pos.x wall1_ip1_pos.y wall1_ip1_pos.z wall1_ip2_pos.x wall1_ip2_pos.y wall1_ip2_pos.z wall2_pos.x wall2_pos.y wall2_pos.z wall2_forward.x wall2_forward.y wall2_forward.z wall2_ip1_pos.x wall2_ip1_pos.y wall2_ip1_pos.z wall2_ip2_pos.x wall2_ip2_pos.y wall2_ip2_pos.z wall3_pos.x wall3_pos.y wall3_pos.z wall3_forward.x wall3_forward.y wall3_forward.z wall3_ip1_pos.x wall3_ip1_pos.y wall3_ip1_pos.z wall3_ip2_pos.x wall3_ip2_pos.y wall3_ip2_pos.z wall4_pos.x wall4_pos.y wall4_pos.z wall4_forward.x wall4_forward.y wall4_forward.z wall4_ip1_pos.x wall4_ip1_pos.y wall4_ip1_pos.z wall4_ip2_pos.x wall4_ip2_pos.y wall4_ip2_pos.z target";
-        WriteData(title);*/
+        /* //第一步访问Txt文件
+         string path = Application.dataPath + "/Data/1.txt";
+         //文件流
+         fs = File.OpenWrite(path);
+         string title = "time user_position.x user_position.y user_position.z user_forward.x user_forward.y user_forward.z user_velocity.x user_velocity.y user_velocity.z user_angle_velocity.x user_angle_velocity.y user_angle_velocity.z wall1_pos.x wall1_pos.y wall1_pos.z wall1_forward.x wall1_forward.y wall1_forward.z wall1_ip1_pos.x wall1_ip1_pos.y wall1_ip1_pos.z wall1_ip2_pos.x wall1_ip2_pos.y wall1_ip2_pos.z wall2_pos.x wall2_pos.y wall2_pos.z wall2_forward.x wall2_forward.y wall2_forward.z wall2_ip1_pos.x wall2_ip1_pos.y wall2_ip1_pos.z wall2_ip2_pos.x wall2_ip2_pos.y wall2_ip2_pos.z wall3_pos.x wall3_pos.y wall3_pos.z wall3_forward.x wall3_forward.y wall3_forward.z wall3_ip1_pos.x wall3_ip1_pos.y wall3_ip1_pos.z wall3_ip2_pos.x wall3_ip2_pos.y wall3_ip2_pos.z wall4_pos.x wall4_pos.y wall4_pos.z wall4_forward.x wall4_forward.y wall4_forward.z wall4_ip1_pos.x wall4_ip1_pos.y wall4_ip1_pos.z wall4_ip2_pos.x wall4_ip2_pos.y wall4_ip2_pos.z target";
+         WriteData(title);*/
+        if (virtualWalls == null)
+            virtualWalls = new VirtualWall[4];
     }
 
     private void FixedUpdate()
@@ -51,7 +54,8 @@ public class DataCatcher : MonoBehaviour
         SteamVR_Controller.Device device = SteamVR_Controller.Input((int)user_tracked.index);
         time += Time.deltaTime;
         timer += Time.deltaTime;
-        vwallInfo = GetVWallInfo();
+        UpdateCurrentVWalls();
+        //vwallInfo = GetVWallInfo();
         //sort all the virtual walls according to the value(descending)
         /*virtualWalls.Sort(delegate (VirtualWall a, VirtualWall b)
         {
@@ -69,9 +73,9 @@ public class DataCatcher : MonoBehaviour
             fs.Dispose();
         }*/
         target = UpdateTarget();
-        print("button =" + target);
-        string output = time + " " + VectortoString(user.transform.position) + " " + VectortoString(user.transform.forward) + " " + VectortoString(device.velocity) + " "+VectortoString(device.angularVelocity) + " " + vwallInfo + target;
-        string input = time + " " + VectortoString(user.transform.position) + " " + VectortoString(user.transform.forward) + " " + VectortoString(device.velocity) + " " + VectortoString(device.angularVelocity) + " " + vwallInfo;
+        //print("button =" + target);
+        //string output = time + " " + VectortoString(user.transform.position) + " " + VectortoString(user.transform.forward) + " " + VectortoString(device.velocity) + " "+VectortoString(device.angularVelocity) + " " + vwallInfo + target;
+        string input = time + " " + VectortoString(user.transform.position) + " " + VectortoString(user.transform.forward) + " " + VectortoString(device.velocity) + " " + VectortoString(device.angularVelocity) + " " + boundary;
         //string input = time + "*" + VectortoString(user.transform.position) + "*" + VectortoString(user.transform.forward) + "*" + VectortoString(device.velocity) + "*" + VectortoString(device.angularVelocity) + "*" + vwallInfo;
         if (timer > 0.05f)
         {
@@ -95,6 +99,8 @@ public class DataCatcher : MonoBehaviour
             notice.Play();
             WriteData("");
         }*/
+
+        /* prepare the input data for the predictor */
         string inputStr = null;
         if (infoList.Count == 20)
         {
@@ -103,8 +109,6 @@ public class DataCatcher : MonoBehaviour
                 data_input.Append(input);
             inputStr = data_input.ToString();
             inputStr = inputStr.Remove(inputStr.Length - 1, 1);
-            //string result = py.UsePython(inputStr);
-            //print(result);
             //print(inputStr);
             data_input.Clear();
         }
@@ -119,6 +123,28 @@ public class DataCatcher : MonoBehaviour
         
     }
 
+    /*  update the 4 walls and boundary of the block for ML classifier      */
+    private void UpdateCurrentVWalls()
+    {
+        try
+        {
+            ML_Block block = GetComponent<Find4Walls>().currentBlock;
+            if (GetComponent<Find4Walls>().blockChanged || virtualWalls[0] == null)
+            {
+                //print("updating block***********");
+                for (int i = 0; i < 4; i++)
+                {
+                    virtualWalls[i] = block.walls[i].GetComponent<VirtualWall>();
+                }
+                boundary = $"{block.min_x} {block.max_x} {block.min_z} {block.max_z} ";
+            }
+        }
+        catch (System.Exception e)
+        {
+            print(e.Message);
+        }
+    }
+
 
     private string VectortoString(Vector3 vec)
     {
@@ -128,27 +154,34 @@ public class DataCatcher : MonoBehaviour
     
     private int UpdateTarget()
     {
-        SteamVR_Controller.Device left = SteamVR_Controller.Input((int)left_.index);
-        int a = 0;
-        if (left.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+        try
         {
-            Vector2 touchpad = (left.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-            //up
-            if (touchpad.y > 0.5f)
-                a = 1;
-            //down
-            if (touchpad.y < -0.5f)
-                a = 2;
-            //left
-            if (touchpad.x < -0.5f)
-                a = 3;
-            //right
-            if (touchpad.x > 0.5f)
-                a = 4;
+            SteamVR_Controller.Device left = SteamVR_Controller.Input((int)left_.index);
+            int a = 0;
+            if (left.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
+            {
+                Vector2 touchpad = (left.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+                //up
+                if (touchpad.y > 0.5f)
+                    a = 1;
+                //down
+                if (touchpad.y < -0.5f)
+                    a = 2;
+                //left
+                if (touchpad.x < -0.5f)
+                    a = 3;
+                //right
+                if (touchpad.x > 0.5f)
+                    a = 4;
+            }
+            /*if (left.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+                WriteData("");*/
+            return a;
         }
-        /*if (left.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
-            WriteData("");*/
-        return a;
+        catch(System.NullReferenceException e)
+        {
+            return 0;
+        }
     }
 
     private string GetVWallInfo()

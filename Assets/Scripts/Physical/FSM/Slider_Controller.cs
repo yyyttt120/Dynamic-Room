@@ -8,13 +8,16 @@ public class Slider_Controller : MonoBehaviour {
     public wallType thisWallType = wallType.flat;
     public enum ControllerType { simulation,real};
     public ControllerType thisController = ControllerType.real;
+    [Range(0,0.5f)]
+    public float Boundary_offset = 0;
     private float wallSize;
     private GameObject slider;
     private GameObject user;
     private LayerMask layer = 1 << 8;
     private VirtualWall vwall;
     private bool visible = false;// if the wall can be seen by user (be hit by raycast), it's visible
-                                 // Use this for initialization
+    
+    
     void Start()
     {
         slider = transform.GetChild(0).gameObject;
@@ -64,16 +67,16 @@ public class Slider_Controller : MonoBehaviour {
                     Vector3 userPos_local = transform.InverseTransformPoint(hit.point);
                     //print($"local pos = {userPos_local}");
                     //print($"wallsize = {wallSize}");
-                    if (userPos_local.x > 0.5 - (0.4 / wallSize))
+                    if (userPos_local.x > 0.5 - (0.4 / wallSize)-Boundary_offset)
                     {
                         Vector3 temp = slider.transform.localPosition;
-                        temp.x = (float)(0.5 - (0.4 / wallSize));
+                        temp.x = (float)(0.5 - (0.4 / wallSize)-Boundary_offset);
                         slider.transform.localPosition = temp;
                     }
-                    else if (userPos_local.x < -0.5 + (0.4 / wallSize))
+                    else if (userPos_local.x < -0.5 + (0.4 / wallSize)+Boundary_offset)
                     {
                         Vector3 temp = slider.transform.localPosition;
-                        temp.x = (float)(-0.5 + (0.4 / wallSize));
+                        temp.x = (float)(-0.5 + (0.4 / wallSize)+Boundary_offset);
                         slider.transform.localPosition = temp;
                     }
                     else
