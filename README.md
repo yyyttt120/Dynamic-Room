@@ -37,5 +37,6 @@ VR Devices
 
 Robotic Wall
 - Actuator
- - IRobot Roomba 600 Series
+  - IRobot Roomba 600 Series
 - Overview
+  ![image](img/proto_device.png)
