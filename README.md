@@ -40,3 +40,31 @@ Robotic Wall
   - IRobot Roomba 600 Series
 - Overview
   ![image](img/proto_device.png)
+
+# Structure of project
+
+## Scenes
+
+| Scene Name | Build Target | Description |
+----|----|---- 
+| *Real_Detection* | Windows | 4-wall room with Detection Algorithm and real robotic walls. |
+| *Simulation_Detection* | Windows | 4-wall room with Detection Algorithm and simulated robotic walls. |
+| *Real_ML* | Windows | 4-wall room with ML Combined Algorithm and real robotic walls. |
+| *Simulation_ML* | Windows | 4-wall room with ML Combined Algorithm and simulated robotic walls. |
+
+## Class
+### Class Explanatory Text
+#### Common Scripts
+State Machine
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *WallState* | Animator.Wall(state) | Define the behaviour of robotic wall which is materializing virtual structure. |
+| *Standby_State* | Animator.Standby(state) | Define the behaviour of robotic wall which is not materializing virtual structure and in standby. |
+
+RVO Obstacle Avoidance
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *RVO_agent* | robotic wall | According to the goal position, plan the path without collsion for robotic wall, and send the waypoint to PID controller classes. |
+| *RVO_user_agent* | user avatar | Set user as a special RVO agent which's can't be controlled to make the robotic walls avoid user. |
