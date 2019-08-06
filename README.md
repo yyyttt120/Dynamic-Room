@@ -66,5 +66,54 @@ RVO Obstacle Avoidance
 
 | Class Name | Attached GameObject |Description (What does the class do?) |
 ----|----|---- 
-| *RVO_agent* | robotic wall | According to the goal position, plan the path without collsion for robotic wall, and send the waypoint to PID controller classes. |
+| *RVO_agent* | robotic wall | According to the goal position, plan the path without collsion for robotic wall, and send the waypoint to PID controller classes (Wall_To_Target). |
 | *RVO_user_agent* | user avatar | Set user as a special RVO agent which's can't be controlled to make the robotic walls avoid user. |
+
+Robotic Wall PID Controller
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *Robotic_Wall* | robotic wall | A short cut for calling all the classes on robotic wall gameobject.  |
+| *RoombaControllerScript* | robotic wall | Store the functions to controll the roomba(actuator) in base layer. |
+| *PID_Fuctions* | robotic wall | Store the functions of PID controller for real roomba. |
+| *PID_Fuctions_Simulation* | robotic wall | Store the functions of PID controller for simulation. |
+| *Wall_To_Target* | robotic wall | Use the functions of PID controller to drive the robotic wall to match the position and orientation of target gameobject. |
+
+Virtual Wall
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *VirtualWall* | virtual wall | The basic class for virtual walls in the scenario.  |
+| *RoboticWall_Requester* | virtual wall | Request a robotic wall for this virtual wall while it collide with detecting block. |
+| *Slider_Controller* | virtual wall | Controll a slider moving with user along this virtual wall, this slider is indicating the position and orientation for the robotic wall which is used to materialize this virtual wall. |
+
+Standby Points
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *Standby_Requester* | Stand_by | Find a waiting position for the robotic walls in standby state. |
+
+#### Detection Algorithm
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *FSM_forDetection* | robotic wall | Finite state machine for robotic walls in detection algorithm. |
+| *DetectBlockController* | DetectBlock | Control the position of detecting block to follow the user. |
+
+#### ML Combined Detection Algorithm
+
+Unity Side
+
+| Class Name | Attached GameObject |Description (What does the class do?) |
+----|----|---- 
+| *FSM_forML* | robotic wall | Finite state machine for robotic walls in ML combined detection algorithm. |
+| *DataCatcher* | Data_Processer | Collect data of user at realtime, and package them before sending to python side. |
+| *Client_Object* | Data_Processer | Client of a socket connection between unity and python sides, send packaged data to python side (sever) and recieve the response . |
+| *Allocator* | Data_Processer | Based on the response from python side, find the virtual wall most likely be touched by user and allocate a closest robotic wall to it . |
+
+Python Side
+
+| Flie Name |Description (What does the class do?) |
+----|---- 
+| *ML_Predictor* |Based on the data of user, predict which virtual wall the user going to touch, and return the ID of this virtual wall. |
+| *ZMQ_Server* |Recieve the data of user from unity side and send back the result calculated by ML_Predictor. |
